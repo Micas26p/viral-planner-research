@@ -28,3 +28,4 @@ qa-*.png
 *.mp4
 tools/
 scripts/push-repo.js
+.node/

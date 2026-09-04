@@ -1,83 +1,56 @@
-# Viral Research
+# 🚀 Viral Research Niche Finder
 
-Local Niche Finder for long-form YouTube outlier and channel research.
+Local Niche Finder & AI Strategy Suite para mineração de vídeos longos, canais promissores e oportunidades de alto RPM no YouTube.
 
-## Product flow
+---
 
-- Expedicoes autonomas: `Quick 15 min`, `Deep 2 h` ou `Expedition 6 h`, com encerramento antecipado por saturacao.
-- Foco em videos longos com duracoes `Long-form`, `8+ min` e `20+ min`.
-- O modo desktop usa o Chromium interno do Electron, isolado por nicho, para pesquisar, assistir, seguir relacionados, visitar canais e expandir consultas sem limite visivel de canais.
-- Pausa, retomada, checkpoints SQLite e bandeja do Windows permitem pesquisas longas em segundo plano.
-- Sessoes recentes ficam na barra lateral para retomar pesquisas e resultados.
-- Vistas de canais, videos e nichos mostram Opportunity Score, cobertura e atividade ao vivo.
-- O classificador faceless local separa elegiveis, ambiguos para revisao e formatos com apresentador recorrente.
-- Oportunidades inclui favoritos, feedback reutilizavel, mapa de formatos, dossies de producao e tendencia historica.
-- Opportunity Scout volta a verificar canais promissores em segundo plano para distinguir aceleracao real de um pico isolado.
-- Acoes tecnicas de exportacao permanecem disponiveis no backend, mas a interface principal foi mantida limpa para pesquisa e triagem.
+## ⚡ Como Instalar e Rodar em Qualquer Computador (1 Clique)
 
-## App desktop .exe
+Você **não precisa configurar nada manualmente** nem pedir ajuda técnica. O projeto já vem com instaladores automáticos:
 
-Use o executavel principal direto na pasta do Niche Finder:
+### 1. Baixar o Projeto
+- No GitHub, clique no botão verde **Code** > **Download ZIP** (ou clone via `git clone https://github.com/Micas26p/viral-planner-research.git`).
+- Extraia a pasta em qualquer diretório do seu computador Windows.
 
-- `C:\Users\Micael\Downloads\YT\Planner\viral-planner-research\Viral Research.exe`
+### 2. Instalação Automática
+- Dê dois cliques no arquivo **`instalar.bat`**.
+- O script fará tudo sozinho:
+  1. **Verificação do Node.js:** Detecta se você já tem o Node. Se não tiver, baixa a versão portátil oficial do Node.js LTS automaticamente;
+  2. **Configuração de Ambiente:** Cria o arquivo `.env` a partir do modelo `.env.example`;
+  3. **Dependências:** Instala todas as bibliotecas necessárias via `npm`;
+  4. **Compilação:** Gera o executável desktop **`Viral Research.exe`** diretamente na pasta.
 
-Ele abre uma janela propria do aplicativo, inicia o backend embutido e nao abre navegador externo nem CMD.
+### 3. Como Usar no Dia a Dia
+- Basta dar dois cliques em **`iniciar.bat`** (ou direto em **`Viral Research.exe`**).
+- O aplicativo abre direto na janela do sistema, com Chromium interno embutido e sem dependência de terminais abertos.
 
-Para gerar a versao desktop portatil novamente:
+### 🔄 Como Atualizar
+- Para sincronizar novidades do repositório, basta dar dois cliques em **`atualizar.bat`**.
 
-```powershell
-cd C:\Users\Micael\Downloads\YT\Planner\viral-planner-research
-npm.cmd run desktop:dist
-```
+---
 
-O executavel principal continua direto na pasta do Niche Finder:
+## 🛠️ Modos de Pesquisa Disponíveis
 
-- `C:\Users\Micael\Downloads\YT\Planner\viral-planner-research\Viral Research.exe`
+- **Auto Researcher:** Descoberta via navegador interno Chromium, enriquecimento HTTP e precisão de API opcional para os finalistas.
+- **Local Browser:** Pesquisa anônima autônoma sem necessidade de chave de API, utilizando perfil local do Electron.
+- **Fast HTTP:** Extração ultrarrápida sem navegador gráfico.
+- **API Precision:** Integração direta com a YouTube Data API v3 oficial.
 
-Tambem e mantida uma copia portatil completa em:
+---
 
-- `C:\Users\Micael\Downloads\YT\Planner\viral-planner-research\dist\win-unpacked\Viral Research.exe`
+## 💡 Recursos de Inteligência & Automação
 
-Na versao desktop principal, `.env` e `data\` ficam ao lado do `.exe`, na pasta `viral-planner-research`.
+- **Radar Sentinel 2.0 (24/7):** Monitoramento contínuo em segundo plano com gatilhos de *Breakout Velocity* (picos de views/hora) e *Arbitragem Internacional* ("Minas de Ouro BR").
+- **Smart Niche Seeds:** Matriz de sementes tátil no composer com nichos de alto RPM prontos para pesquisa.
+- **Top 1 Niche Spotlight:** Identificação imediata do principal outlier algorítmico do nicho pesquisado.
+- **Raio-X de Retenção (Deep Video Deconstructor):** Engenharia reversa estruturada dos primeiros 30 segundos, ganchos e loops de retenção.
+- **Fábrica de Roteiro Viral (Blueprint Generator):** Geração de roteiros em 3 atos em estilos Documentary, Storytelling e Explanatory.
+- **Thumb-Matrix AI Scanner:** Análise cromática de thumbnails e diagnóstico de composição visual com prompts para Midjourney e Flux.
+- **Dossiê Master de Produção (Masterdeck):** Compilação de relatórios executivos em lote em formato Markdown pronto para exportação.
 
-## Start manual
+---
 
-```powershell
-cd C:\Users\Micael\Downloads\YT\Planner\viral-planner-research
-npm.cmd start
-```
+## 💻 Requisitos do Sistema
 
-Open `http://127.0.0.1:4317`.
-
-## Keys
-
-API keys live in `.env`, which is ignored by git. The frontend never receives raw keys.
-
-## Modes
-
-- `Auto researcher`: internal-browser discovery, cheap HTTP enrichment and optional API precision for finalists.
-- `Local browser`: autonomous no-API research in a persistent anonymous profile; available in the desktop app.
-- `Fast HTTP`: no-API page extraction without the local Chromium worker.
-- `API precision`: official YouTube Data API only.
-
-The standalone web server exposes Fast HTTP and API precision. When the Electron app is running, the web interface on localhost becomes a dashboard for the same local browser engine.
-
-## Settings Studio
-
-The `Settings` view stores one revisioned profile in `data/research.db`, shared by the web dashboard and Electron app. It controls theme, Portuguese/English UI, three motion levels, research defaults, Windows startup, tray behavior, notifications, masked integration health, and storage maintenance.
-
-Changes save automatically with conflict recovery and an eight-second undo action. Settings import/export never includes API keys, cookies, sessions, or research history. Desktop-only controls are visibly unavailable when running only through `node server.js`.
-
-The default search is tuned for long-form outliers and expands progressively through the last 7, 30 and 90 days. Only normal `/watch?v=` videos are eligible; Shorts and live streams are rejected at discovery time. The local browser never bypasses CAPTCHA, consent or access controls; those states pause the job and request manual attention.
-
-## Live Research Computer
-
-Every research job opens an activity band with the current phase, source, task tree and discovery counters. `Ver PC ao vivo` opens a resizable Liquid Glass preview inside the Niche Finder; it can be minimized to a floating status bar or hidden without stopping the job.
-
-Auto and Browser modes use the Electron browser as the real discovery worker. It searches the entered terms, prioritizes 7-day results before expanding to 30 and 90 days, watches 30 seconds of verified content, scrolls to recommendations and follows the strongest related trail. HTTP and API modes keep an operational visualization tied to their real tasks.
-
-The compact live-computer popup requests at most two preview frames per second and stops capturing when hidden. `Expandir` opens the same worker directly in a dedicated, resizable Viral Research window; it never launches Chrome, Edge or the default browser. Each normalized niche receives its own persistent anonymous partition, and its cookies stay in Electron rather than in the research database.
-
-Potential channels are saved automatically when a recent long-form video reaches the opportunity and confidence thresholds. The decision, responsible video, 30-second watch event, discovery path and recent-channel baseline are stored in SQLite for later inspection.
-
-Missing data is never promoted into fake precision: unverified channel age, subscribers or baselines appear as pending. A confirmed outlier requires at least three comparable recent long-form videos, and consistency requires at least five observations.
+- **Sistema Operacional:** Windows 10 ou Windows 11 (64-bit).
+- **Conexão de Internet:** Para mineração e atualização de dados.
