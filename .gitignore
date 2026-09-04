@@ -1,0 +1,30 @@
+node_modules/
+.npm-cache/
+.electron-cache/
+.electron-builder-cache/
+.chrome-qa/
+.qa-storage*/
+.env
+dist/
+/data/
+*.log
+qa-*.png
+/Viral Planner Research.exe
+/Viral Research.exe
+/icon.ico
+/locales/
+/resources/
+/chrome_*.pak
+/resources.pak
+/icudtl.dat
+/snapshot_blob.bin
+/v8_context_snapshot.bin
+/vk_swiftshader_icd.json
+/version
+/*.dll
+/LICENSE
+/LICENSES.chromium.html
+/*.html
+*.mp4
+tools/
+scripts/push-repo.js

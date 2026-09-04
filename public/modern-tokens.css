@@ -1,0 +1,197 @@
+@font-face {
+  font-family: "Inter";
+  src: url("fonts/inter-variable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter Tight";
+  src: url("fonts/inter-tight-variable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("fonts/jetbrains-mono-400.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("fonts/jetbrains-mono-700.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --bg: #f4f6f5;
+  --bg2: #ecefed;
+  --card: rgba(255, 255, 255, .96);
+  --card2: #f8faf9;
+  --line: #dfe4e1;
+  --line2: #cbd2ce;
+  --text: #101312;
+  --muted: #626a66;
+  --muted2: #858d89;
+  --go: #05c997;
+  --go-strong: #009e76;
+  --go2: rgba(5, 201, 151, .11);
+  --blue: #2f6df6;
+  --amber: #d99217;
+  --red: #e04444;
+  --dark: #0b0d0c;
+  --accent: var(--go);
+  --panel: var(--card);
+  --panel-strong: var(--card2);
+
+  /* Semantic Feature Accents */
+  --color-arbitrage: #8b5cf6;
+  --color-arbitrage-bg: rgba(139, 92, 246, 0.12);
+  --color-blueprint: #0ea5e9;
+  --color-blueprint-bg: rgba(14, 165, 233, 0.12);
+  --color-thumb: #ec4899;
+  --color-thumb-bg: rgba(236, 72, 153, 0.12);
+  --color-sentinel: #10b981;
+  --color-sentinel-bg: rgba(16, 185, 129, 0.12);
+
+  /* Shadows & Depth Hierarchy */
+  --shadow-xs: 0 1px 2px rgba(17, 28, 23, .04);
+  --shadow-sm: 0 2px 6px rgba(17, 28, 23, .05);
+  --shadow-md: 0 6px 16px rgba(17, 28, 23, .07);
+  --shadow-lg: 0 12px 34px rgba(17, 28, 23, .08);
+  --shadow-xl: 0 20px 48px rgba(17, 28, 23, .11);
+  --shadow: var(--shadow-lg);
+  --shadow-soft: var(--shadow-md);
+
+  /* Glass & Overlays */
+  --glass-fill: rgba(252, 254, 253, .82);
+  --glass-edge: rgba(255, 255, 255, .9);
+  --glass-highlight: rgba(255, 255, 255, .68);
+  --glass-shadow: 0 10px 26px rgba(25, 39, 32, .08), inset 0 1px 0 rgba(255, 255, 255, .84);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px color-mix(in srgb, var(--go) 80%, transparent);
+
+  /* Scrollbars */
+  --scroll-track: rgba(36, 48, 42, .05);
+  --scroll-thumb: rgba(65, 76, 70, .32);
+  --scroll-hover: color-mix(in srgb, var(--go) 58%, #5d6863);
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+  --r: 8px;
+
+  /* Typography Scale */
+  --text-2xs: 10px;
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 13px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 22px;
+  --text-3xl: 28px;
+  --ff-head: "Inter Tight", "Segoe UI Variable Display", "Segoe UI", sans-serif;
+  --ff-body: "Inter", "Segoe UI Variable Text", "Segoe UI", sans-serif;
+  --ff-mono: "JetBrains Mono", "Cascadia Mono", monospace;
+
+  /* Motion Curves */
+  --ease-standard: cubic-bezier(.16, 1, .3, 1);
+  --ease-spring: cubic-bezier(.34, 1.4, .64, 1);
+}
+
+[data-theme="dark"] {
+  --bg: #090b0a;
+  --bg2: #0e1110;
+  --card: rgba(17, 20, 19, .97);
+  --card2: #141816;
+  --line: #252b28;
+  --line2: #343c38;
+  --text: #f1f4f2;
+  --muted: #9aa29e;
+  --muted2: #6f7974;
+  --go: #10d9a4;
+  --go-strong: #4be7bd;
+  --go2: rgba(16, 217, 164, .105);
+  --blue: #6c93ff;
+  --amber: #efad3f;
+  --red: #ff6a6a;
+  --dark: #030504;
+  --accent: var(--go);
+  --panel: var(--card);
+  --panel-strong: var(--card2);
+
+  /* Semantic Feature Accents (Dark Mode Adjusted) */
+  --color-arbitrage: #a78bfa;
+  --color-arbitrage-bg: rgba(167, 139, 250, 0.16);
+  --color-blueprint: #38bdf8;
+  --color-blueprint-bg: rgba(56, 189, 248, 0.16);
+  --color-thumb: #f472b6;
+  --color-thumb-bg: rgba(244, 114, 182, 0.16);
+  --color-sentinel: #34d399;
+  --color-sentinel-bg: rgba(52, 211, 153, 0.16);
+
+  /* Dark Mode Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, .18);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, .24);
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, .32);
+  --shadow-lg: 0 14px 38px rgba(0, 0, 0, .42);
+  --shadow-xl: 0 22px 56px rgba(0, 0, 0, .52);
+  --shadow: var(--shadow-lg);
+  --shadow-soft: var(--shadow-md);
+
+  /* Dark Mode Glass */
+  --glass-fill: rgba(24, 29, 27, .8);
+  --glass-edge: rgba(255, 255, 255, .105);
+  --glass-highlight: rgba(255, 255, 255, .13);
+  --glass-shadow: 0 14px 30px rgba(0, 0, 0, .27), inset 0 1px 0 rgba(255, 255, 255, .09);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px color-mix(in srgb, var(--go) 75%, transparent);
+
+  /* Scrollbars */
+  --scroll-track: rgba(255, 255, 255, .025);
+  --scroll-thumb: rgba(255, 255, 255, .23);
+  --scroll-hover: color-mix(in srgb, var(--go) 62%, #89918d);
+}
+
+html {
+  font-size: 14px;
+  font-variation-settings: "opsz" 14;
+}
+
+*,
+*::before,
+*::after {
+  letter-spacing: 0 !important;
+}
+
+body {
+  background: var(--bg);
+  font-family: var(--ff-body);
+  letter-spacing: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  letter-spacing: 0;
+}
+
+#cv {
+  opacity: .21;
+}
+
+::selection {
+  color: #07110e;
+  background: color-mix(in srgb, var(--go) 68%, #fff);
+}

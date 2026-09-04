@@ -1,0 +1,1187 @@
+<!doctype html>
+<html lang="pt" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Viral Research</title>
+  <meta name="theme-color" content="#06d6a0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="alternate icon" type="image/png" href="favicon.png">
+  <script src="theme-boot.js?v=4.3"></script>
+  <link rel="stylesheet" href="styles.css?v=4.3">
+  <link rel="stylesheet" href="modern-tokens.css?v=4.3">
+  <link rel="stylesheet" href="modern-workspace.css?v=4.3">
+  <link rel="stylesheet" href="modern-motion.css?v=4.3">
+<body>
+  <header class="mobile-appbar">
+    <button class="mobile-menu-button" id="mobileMenuBtn" type="button" aria-label="Abrir navegação" aria-controls="appSidebar">
+      <svg aria-hidden="true"><use href="lucide-sprite.svg#menu"></use></svg>
+    </button>
+    <span class="mobile-brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#brand-mark-shape"></use></svg></span>
+    <div><b>Viral Research</b><small>Niche Finder</small></div>
+    <span class="mobile-connection-dot" aria-hidden="true"></span>
+  </header>
+  <button class="sidebar-backdrop" id="sidebarBackdrop" type="button" aria-label="Fechar navegação"></button>
+
+  <div class="app">
+    <aside class="sb" id="appSidebar">
+      <div class="sb-head">
+        <div class="sb-logo" aria-hidden="true">
+          <svg class="brand-symbol" viewBox="0 0 64 64" role="img">
+            <defs><symbol id="brand-mark-shape" viewBox="0 0 64 64"><rect width="64" height="64" rx="18" fill="#f4f6f1"/><rect x="8" y="8" width="48" height="48" rx="15" fill="#eefcf7" stroke="#8fe8d2" stroke-width="2"/><path d="M25 19v26l22-13z" fill="#06110f"/><circle cx="24" cy="32" r="4" fill="#06d6a0"/><path d="M20 16c5-2 15-2 23 2" fill="none" stroke="#06d6a0" stroke-width="2" stroke-linecap="round" opacity=".7"/></symbol></defs>
+            <use class="brand-base" href="#brand-mark-shape"></use>
+            <path class="brand-scan" d="M17 31h31" fill="none" stroke="#06d6a0" stroke-width="2" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="sb-brand-copy">
+          <div class="sb-title">Viral<br>Research</div>
+          <div class="sb-sub">Niche Finder</div>
+        </div>
+        <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Recolher barra lateral" aria-expanded="true">
+          <svg aria-hidden="true"><use href="lucide-sprite.svg#panel-left"></use></svg>
+        </button>
+      </div>
+
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <span class="nav-glass" aria-hidden="true"></span>
+        <button class="nav-btn on" id="navResearch" type="button" data-page="research">
+          <svg aria-hidden="true"><use href="lucide-sprite.svg#search"></use></svg>
+          <span data-i18n="nav.research">Niche Finder</span>
+        </button>
+        <button class="nav-btn" id="navOpportunities" type="button" data-page="opportunities">
+          <svg aria-hidden="true"><use href="lucide-sprite.svg#sparkles"></use></svg>
+          <span data-i18n="nav.opportunities">Oportunidades</span>
+        </button>
+        <button class="nav-btn" id="navSettings" type="button" data-page="settings">
+          <svg aria-hidden="true"><use href="lucide-sprite.svg#settings"></use></svg>
+          <span data-i18n="nav.settings">Settings</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-utility" aria-label="Research shortcuts">
+        <button type="button" data-sidebar-flyout="presets" title="Presets">
+          <svg aria-hidden="true"><use href="lucide-sprite.svg#sliders"></use></svg><span data-i18n="nav.presets">Presets</span>
+        </button>
+        <button type="button" data-sidebar-flyout="sessions" title="Sessions">
+          <svg aria-hidden="true"><use href="lucide-sprite.svg#history"></use></svg><span data-i18n="nav.sessions">Sessions</span>
+        </button>
+      </div>
+
+      <section class="sidebar-panel presets-panel" data-sidebar-panel="presets">
+        <div class="sb-label"><span data-i18n="nav.presets">Presets</span><small>9</small></div>
+        <div class="preset-list" id="presetList"></div>
+      </section>
+
+      <section class="sidebar-panel sessions-panel" data-sidebar-panel="sessions">
+        <div class="sb-label"><span data-i18n="nav.sessions">Sessions</span><small>Local</small></div>
+        <div class="session-list" id="sessionList"></div>
+      </section>
+
+      <div class="sb-foot">
+        <div class="settings-sync" id="sidebarSync">Settings synced</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="top-bar">
+        <div>
+          <div class="top-title">Viral Research</div>
+          <div class="top-sub" id="topSub">Niche Finder</div>
+        </div>
+        <div class="key-pill" id="keyStatus">Connecting</div>
+      </div>
+
+      <section class="workspace page-view on" id="researchWorkspace" data-page-view="research">
+        <form class="research-panel command-center" id="researchForm" novalidate>
+          <div class="panel-head command-intro">
+            <div>
+              <div class="kicker">Niche Finder</div>
+              <h1 data-i18n="research.commandTitle">Discover the next breakout niche</h1>
+              <p data-i18n="research.commandHelp">Guide the researcher with a topic, an audience or a pattern worth following.</p>
+            </div>
+            <div class="run-state" id="runState">
+              <span class="pulse"></span>
+              <span id="runText">Ready</span>
+            </div>
+          </div>
+
+          <div class="research-core command-composer">
+            <label class="field query-field">
+              <span>Topic or keywords</span>
+              <textarea id="keywords" rows="4" placeholder="faceless outliers&#10;ancient history explained&#10;business documentary"></textarea>
+            </label>
+
+            <div class="composer-niche-seeds" id="composerNicheSeeds" aria-label="Sugestões de nichos virais comprovados">
+              <span class="seeds-label">✨ Nichos em Alta:</span>
+              <button type="button" class="seed-chip" data-seed="mistérios não resolvidos, arqueologia proibida, história oculta">🏛️ História & Mistérios</button>
+              <button type="button" class="seed-chip" data-seed="psicologia sombria, mentes criminosas, manipulação comportamental">🧠 Psicologia & Crime</button>
+              <button type="button" class="seed-chip" data-seed="mega engenharia militar, tecnologia secreta, veículos de guerra">🚀 Engenharia & Militar</button>
+              <button type="button" class="seed-chip" data-seed="ascensão e queda de impérios, segredos de bilionários, fraudes financeiras">💼 Negócios & Poder</button>
+              <button type="button" class="seed-chip" data-seed="criaturas abissais, anomalias da natureza, biologia bizarra">🌊 Oceano & Anomalias</button>
+            </div>
+
+            <div class="core-controls composer-footer">
+              <label class="field composer-option">
+                <span>Research mode</span>
+                <select id="mode">
+                  <option value="auto" selected>Auto researcher</option>
+                  <option value="browser">Local browser</option>
+                  <option value="http">Fast HTTP</option>
+                  <option value="api">API precision</option>
+                </select>
+              </label>
+              <label class="field composer-option">
+                <span>Expedition length</span>
+                <select id="timeBudget">
+                  <option value="15m">Quick · 15 min</option>
+                  <option value="2h" selected>Deep · up to 2 h</option>
+                  <option value="6h">Expedition · up to 6 h</option>
+                </select>
+              </label>
+              <label class="field composer-option">
+                <span>Video length</span>
+                <select id="duration">
+                  <option value="long" selected>Long-form</option>
+                  <option value="deepLong">8+ min</option>
+                  <option value="twentyLong">20+ min</option>
+                </select>
+              </label>
+              <button class="run-btn" id="runBtn" type="submit">
+                <span id="runBtnText">Run research</span>
+                <svg aria-hidden="true"><use href="lucide-sprite.svg#arrow-up-right"></use></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="research-profile-bar" id="researchProfileBar">
+            <span class="profile-bar-label">Perfil:</span>
+            <div class="profile-chips" id="profileChips">
+              <button type="button" class="profile-chip on" data-profile-id="anonymous" title="Pesquisa limpa sem cookies ou viés">
+                <span class="profile-chip-icon">🕶️</span>
+                <span class="profile-chip-title">Modo Anônimo</span>
+                <span class="profile-chip-badge">Zero viés</span>
+              </button>
+              <button type="button" class="profile-chip" data-profile-id="profile-1" title="Conta aquecida para nicho A">
+                <span class="profile-chip-icon">👤</span>
+                <span class="profile-chip-title" id="profile1ChipTitle">Perfil 1 (Nicho A)</span>
+                <span class="profile-chip-badge" id="profile1AuthBadge">⚪ Não logado</span>
+              </button>
+              <button type="button" class="profile-chip" data-profile-id="profile-2" title="Conta aquecida para nicho B / Geral">
+                <span class="profile-chip-icon">👤</span>
+                <span class="profile-chip-title" id="profile2ChipTitle">Perfil 2 (Nicho B)</span>
+                <span class="profile-chip-badge" id="profile2AuthBadge">⚪ Não logado</span>
+              </button>
+              <button type="button" class="profile-chip" data-profile-id="all_profiles" title="Minera simultaneamente todos os perfis (Perfil 1 + Perfil 2 + Anônimo) e combina tudo no feed principal">
+                <span class="profile-chip-icon">⚡</span>
+                <span class="profile-chip-title">Todos os Perfis</span>
+                <span class="profile-chip-badge">Simultâneo</span>
+              </button>
+            </div>
+            <label class="profile-home-toggle" id="profileHomeToggle" hidden title="Quando ativo, o minerador extrai as recomendações orgânicas que o algoritmo do YouTube exibe na página inicial desta conta aquecida">
+              <input type="checkbox" id="scrapeHomeFeed" checked>
+              <span class="home-toggle-icon">🏠</span>
+              <span class="home-toggle-label">Feed da Home</span>
+            </label>
+            <button type="button" class="profile-warmup-btn" id="openWarmingBtn" hidden title="Abrir janela interativa para logar conta Google e treinar o algoritmo deste perfil">
+              <svg aria-hidden="true"><use href="lucide-sprite.svg#key"></use></svg>
+              <span>Login & Aquecer</span>
+            </button>
+          </div>
+
+          <div class="preset-strategy" id="presetStrategy" data-preset="all">
+            <span class="preset-strategy-dot" aria-hidden="true"></span>
+            <div><small>Estratégia ativa</small><b>Todos os vídeos</b><span>Pesquisa faceless longa sem limites adicionais</span></div>
+          </div>
+
+          <div class="quick-intents" id="quickIntents">
+            <button type="button" class="intent-chip" data-intent="baby" title="Canais com primeiro upload há menos de 60 dias e já tracionando">
+              <span class="intent-icon">🍼</span>
+              <span class="intent-text"><b>Canais Bebês</b><small>&lt; 60 dias &amp; alta tração</small></span>
+            </button>
+            <button type="button" class="intent-chip" data-intent="outlier" title="Vídeos que furaram a bolha de inscritos (Views/Subs &gt;= 8x)">
+              <span class="intent-icon">🚀</span>
+              <span class="intent-text"><b>Outliers Puros</b><small>&gt; 8x a base de inscritos</small></span>
+            </button>
+            <button type="button" class="intent-chip" data-intent="hot" title="Vídeos dos últimos 7 dias com velocidade máxima diária">
+              <span class="intent-icon">📈</span>
+              <span class="intent-text"><b>Em Alta (Semana)</b><small>&lt; 7 dias &amp; alta velocidade</small></span>
+            </button>
+          </div>
+
+          <details class="advanced-panel">
+            <summary><span>Advanced research</span><svg aria-hidden="true"><use href="lucide-sprite.svg#chevron-down"></use></svg></summary>
+            <div class="advanced-grid">
+              <label class="field area"><span>Seed channels</span><textarea id="seedChannels" rows="4" placeholder="@channel&#10;https://www.youtube.com/@channel"></textarea></label>
+              <label class="field"><span>Region</span><input id="region" maxlength="2" value="US"></label>
+              <label class="field"><span>Language</span><input id="language" maxlength="8" value="en"></label>
+              <label class="field"><span>Video age</span><select id="maxVideoAgeDays"><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90" selected>Last 90 days</option></select></label>
+              <label class="field"><span>Channel age</span><select id="channelAgeDays"><option value="0">Prioritize new</option><option value="30">Up to 30 days</option><option value="60">Up to 60 days</option><option value="90">Up to 90 days</option></select></label>
+              <label class="field"><span>Sort</span><select id="sort"><option value="outlier">Outlier</option><option value="views">Views</option><option value="viewsPerDay">Velocity</option><option value="recent">Recent</option></select></label>
+              <label class="field"><span>Minimum faceless score</span><input id="facelessThreshold" type="number" min="45" max="90" step="1" value="70"></label>
+              <label class="field"><span>Minimum views</span><input id="minViews" type="number" min="0" step="1000" placeholder="0"></label>
+              <label class="field"><span>Maximum views</span><input id="maxViews" type="number" min="0" step="1000" placeholder="Any"></label>
+              <label class="field"><span>Minimum subscribers</span><input id="minSubscribers" type="number" min="0" step="100" placeholder="0"></label>
+              <label class="field"><span>Maximum subscribers</span><input id="maxSubscribers" type="number" min="0" step="100" placeholder="Any"></label>
+              <label class="field"><span>Maximum channel videos</span><input id="maxChannelVideos" type="number" min="0" step="1" placeholder="Any"></label>
+              <label class="field"><span>Minimum outlier</span><input id="minOutlier" type="number" min="0" step="1" placeholder="0x"></label>
+              <label class="field"><span>Minimum views/day</span><input id="minViewsPerDay" type="number" min="0" step="100" placeholder="0"></label>
+              <label class="field"><span>Minimum views/subscriber</span><input id="minViewsPerSubscriber" type="number" min="0" step=".1" placeholder="0"></label>
+              <label class="check-field"><input id="hideUnknownChannelAge" type="checkbox"><span>Hide unknown channel age</span></label>
+            </div>
+          </details>
+          <input id="publishedAfter" type="hidden" value="">
+          <input id="publishedBefore" type="hidden" value="">
+          <input id="facelessMode" type="hidden" value="strict">
+          <input id="useGemini" type="hidden" value="0">
+          <input id="favoritesOnly" type="hidden" value="0">
+
+          <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+          <div class="research-actions mission-controls" id="researchActions">
+            <div class="mission-buttons">
+              <button class="control-btn" id="pauseBtn" type="button" title="Pause research" disabled><svg><use href="lucide-sprite.svg#pause"></use></svg><span>Pause</span></button>
+              <button class="control-btn" id="resumeBtn" type="button" title="Resume research" disabled><svg><use href="lucide-sprite.svg#play"></use></svg><span>Resume</span></button>
+              <button class="control-btn" id="inspectBtn" type="button" title="Ver computador de pesquisa" disabled><svg><use href="lucide-sprite.svg#monitor"></use></svg><span>Ver PC ao vivo</span></button>
+              <button class="control-btn" id="openBrowserTabHeaderBtn" type="button" title="Abrir em aba ou janela externa" disabled><svg><use href="lucide-sprite.svg#external-link"></use></svg><span>Aba Browser</span></button>
+            </div>
+            <span class="browser-state" id="browserState">Browser checking</span>
+          </div>
+        </form>
+
+        <section class="live-research-panel" id="liveResearchPanel" hidden>
+          <div class="thinking-core" aria-hidden="true"><span></span><i></i><i></i><i></i></div>
+          <div class="live-research-main">
+            <div class="live-research-head">
+              <div><span class="live-eyebrow" id="livePhase">PESQUISA AO VIVO</span><h2 id="liveSubject">Preparando a expedição</h2></div>
+              <div class="live-head-actions"><span class="source-badge" id="liveSource">AUTO</span><button class="icon-control" id="hideLivePanelBtn" type="button" title="Ocultar painel"><svg><use href="lucide-sprite.svg#eye-off"></use></svg></button></div>
+            </div>
+            <div class="thinking-line"><span></span><p id="liveThinkingText">Pensando na próxima etapa da pesquisa...</p></div>
+            <div class="live-task-tree" id="liveTaskTree"></div>
+            <div class="live-research-foot">
+              <span id="liveTaskCounts">0 concluídas · 0 na fila</span>
+              <div class="live-foot-btns">
+                <button class="live-computer-trigger" id="openLiveComputerBtn" type="button"><svg><use href="lucide-sprite.svg#monitor"></use></svg><span>Ver PC ao vivo</span></button>
+                <button class="live-browser-tab-trigger" id="openNativeBrowserBtn" type="button" title="Abrir em aba ou janela externa"><svg><use href="lucide-sprite.svg#external-link"></use></svg><span>Aba Local Browser</span></button>
+              </div>
+            </div>
+          </div>
+        </section>
+        <button class="live-research-chip" id="liveResearchChip" type="button" hidden><span class="live-dot"></span><b id="liveChipText">Pesquisa ao vivo</b><small id="liveChipCount">0 etapas</small></button>
+
+        <section class="results-shell">
+          <div class="results-head">
+            <div class="results-title-group">
+              <div class="section-title">Faceless Outliers</div>
+              <div class="section-sub" id="resultSub">0 videos</div>
+            </div>
+            <div class="results-tools">
+              <div class="view-tabs" role="tablist" aria-label="Research views">
+                <button class="view-tab on" type="button" data-view="channels" role="tab">Channels</button>
+                <button class="view-tab" type="button" data-view="videos" role="tab">Videos</button>
+                <button class="view-tab" type="button" data-view="niches" role="tab">Niches</button>
+              </div>
+              <div class="display-mode-toggle" id="viewDisplayToggle" role="group" aria-label="Modo de Exibição">
+                <button type="button" class="display-toggle-btn on" data-display-mode="grid" title="Visualização em Grid Cinemático">
+                  <svg width="15" height="15"><use href="lucide-sprite.svg#layout-grid"></use></svg>
+                </button>
+                <button type="button" class="display-toggle-btn" data-display-mode="table" title="Visualização em Tabela Analítica (Planilha)">
+                  <svg width="15" height="15"><use href="lucide-sprite.svg#list"></use></svg>
+                </button>
+              </div>
+              <button class="nex-btn nex-btn-random" id="randomNicheBtn" type="button" title="Surpreenda-me com um nicho viral">
+                <svg><use href="lucide-sprite.svg#shuffle"></use></svg>
+                <span>Random</span>
+              </button>
+              <button class="nex-btn nex-btn-export" id="exportNotionBtn" type="button" title="Copiar tabela formatada para Notion / Markdown">
+                <svg><use href="lucide-sprite.svg#file-text"></use></svg>
+                <span>Notion</span>
+              </button>
+              <button class="nex-btn nex-btn-export" id="exportCsvBtn" type="button" title="Baixar CSV com todos os dados e métricas">
+                <svg><use href="lucide-sprite.svg#download"></use></svg>
+                <span>CSV</span>
+              </button>
+              <label class="switch nex-switch-seen" id="hideSeenWrapper">
+                <input id="hideSeen" type="checkbox">
+                <span>Hide seen</span>
+              </label>
+              <div class="search">
+                <span>Search</span>
+                <input id="resultSearch" placeholder="Search outliers, titles, -negative...">
+              </div>
+            </div>
+          </div>
+
+          <!-- Outlier Explorer Filter Pills Bar -->
+          <div class="outlier-filter-bar" id="outlierFilterBar">
+            <div class="filter-pills-scroll">
+              <div class="filter-dropdown" data-dropdown="views">
+                <button type="button" class="filter-pill-drop" id="dropViewsBtn">
+                  <span>Views</span> <svg width="14" height="14"><use href="lucide-sprite.svg#chevron-down"></use></svg>
+                </button>
+                <div class="filter-menu" hidden>
+                  <span class="menu-title">Visualizações Mínimas</span>
+                  <div class="menu-chips">
+                    <button type="button" data-val="10000">10k+</button>
+                    <button type="button" data-val="50000">50k+</button>
+                    <button type="button" data-val="100000">100k+</button>
+                    <button type="button" data-val="500000">500k+</button>
+                    <button type="button" data-val="0" class="on">Qualquer</button>
+                  </div>
+                  <div class="menu-input-row">
+                    <input type="number" id="customMinViews" placeholder="Mínimo (ex: 25000)" step="5000">
+                    <button type="button" class="apply-btn" id="applyViewsBtn">Aplicar</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="filter-dropdown" data-dropdown="outlier">
+                <button type="button" class="filter-pill-drop" id="dropOutlierBtn">
+                  <span>Outlier</span> <svg width="14" height="14"><use href="lucide-sprite.svg#chevron-down"></use></svg>
+                </button>
+                <div class="filter-menu" hidden>
+                  <span class="menu-title">Multiplicador Viral (Outlier)</span>
+                  <div class="menu-chips">
+                    <button type="button" data-val="3">3x+</button>
+                    <button type="button" data-val="5">5x+</button>
+                    <button type="button" data-val="10">10x+</button>
+                    <button type="button" data-val="20">20x+</button>
+                    <button type="button" data-val="0" class="on">Todos</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="filter-dropdown" data-dropdown="vph">
+                <button type="button" class="filter-pill-drop" id="dropVphBtn">
+                  <span>Views/hour</span> <svg width="14" height="14"><use href="lucide-sprite.svg#chevron-down"></use></svg>
+                </button>
+                <div class="filter-menu" hidden>
+                  <span class="menu-title">Velocidade (Views por Hora)</span>
+                  <div class="menu-chips">
+                    <button type="button" data-val="50">50+ vph</button>
+                    <button type="button" data-val="200">200+ vph</button>
+                    <button type="button" data-val="500">500+ vph</button>
+                    <button type="button" data-val="1000">1000+ vph</button>
+                    <button type="button" data-val="0" class="on">Qualquer</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="filter-dropdown" data-dropdown="subs">
+                <button type="button" class="filter-pill-drop" id="dropSubsBtn">
+                  <span>Subscribers</span> <svg width="14" height="14"><use href="lucide-sprite.svg#chevron-down"></use></svg>
+                </button>
+                <div class="filter-menu" hidden>
+                  <span class="menu-title">Máximo de Inscritos do Canal</span>
+                  <div class="menu-chips">
+                    <button type="button" data-val="10000">&lt; 10k</button>
+                    <button type="button" data-val="50000">&lt; 50k</button>
+                    <button type="button" data-val="100000">&lt; 100k</button>
+                    <button type="button" data-val="250000">&lt; 250k</button>
+                    <button type="button" data-val="0" class="on">Sem limite</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="filter-dropdown" data-dropdown="published">
+                <button type="button" class="filter-pill-drop" id="dropPublishedBtn">
+                  <span>Published</span> <svg width="14" height="14"><use href="lucide-sprite.svg#chevron-down"></use></svg>
+                </button>
+                <div class="filter-menu" hidden>
+                  <span class="menu-title">Período de Publicação</span>
+                  <div class="menu-chips">
+                    <button type="button" data-val="7">Últimos 7 dias</button>
+                    <button type="button" data-val="30">Últimos 30 dias</button>
+                    <button type="button" data-val="90">Últimos 90 dias</button>
+                    <button type="button" data-val="0" class="on">Todos</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-sort-wrap">
+              <button type="button" class="sort-pill-drop" id="dropSortBtn">
+                <svg width="14" height="14"><use href="lucide-sprite.svg#shuffle"></use></svg>
+                <span id="currentSortLabel">Sort: Outlier Score</span>
+                <svg width="14" height="14"><use href="lucide-sprite.svg#chevron-down"></use></svg>
+              </button>
+              <div class="filter-menu right" id="sortMenu" hidden>
+                <button type="button" data-sort-val="outlier" class="on">🔥 Outlier Multiplier</button>
+                <button type="button" data-sort-val="vph">⚡ Views / Hora (VPH)</button>
+                <button type="button" data-sort-val="views">👁️ Total Views</button>
+                <button type="button" data-sort-val="recent">🕒 Mais Recentes</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="niche-category-strip" id="nicheCategoryStrip" role="tablist" aria-label="Niche Categories">
+            <button type="button" class="niche-tag on" data-niche-tag="all">All Niches</button>
+            <button type="button" class="niche-tag" data-niche-tag="history">History</button>
+            <button type="button" class="niche-tag" data-niche-tag="crime">Paranormal & Mysteries</button>
+            <button type="button" class="niche-tag" data-niche-tag="science">Science & Space</button>
+            <button type="button" class="niche-tag" data-niche-tag="finance">Finance & Wealth</button>
+            <button type="button" class="niche-tag" data-niche-tag="military">Military & War</button>
+            <button type="button" class="niche-tag" data-niche-tag="philosophy">Dark Psychology & Stoicism</button>
+            <button type="button" class="niche-tag" data-niche-tag="engineering">Megaprojects & Engineering</button>
+            <button type="button" class="niche-tag" data-niche-tag="geopolitics">Geopolitics & News</button>
+            <button type="button" class="niche-tag" data-niche-tag="aviation">Aviation & Disasters</button>
+            <button type="button" class="niche-tag" data-niche-tag="mythology">Mythology & Folklore</button>
+            <button type="button" class="niche-tag" data-niche-tag="wildlife">Nature & Wildlife</button>
+          </div>
+
+          <div class="niche-benchmark-panel" id="nicheBenchmarkPanel">
+            <div class="benchmark-col">
+              <span class="benchmark-label">Avg. Subscribers</span>
+              <strong class="benchmark-val" id="bmAvgSubs">—</strong>
+            </div>
+            <div class="benchmark-col">
+              <span class="benchmark-label">Avg. Views / Video</span>
+              <strong class="benchmark-val" id="bmAvgViews">—</strong>
+            </div>
+            <div class="benchmark-col">
+              <span class="benchmark-label">Avg. Days Since Start</span>
+              <strong class="benchmark-val" id="bmAvgAge">—</strong>
+            </div>
+            <div class="benchmark-col">
+              <span class="benchmark-label">Avg. Uploads</span>
+              <strong class="benchmark-val" id="bmAvgUploads">—</strong>
+            </div>
+            <div class="benchmark-col highlight">
+              <span class="benchmark-label">Est. Niche RPM</span>
+              <strong class="benchmark-val rpm" id="bmEstRpm">$4.50 - $9.50</strong>
+            </div>
+          </div>
+
+          <div class="preset-pill-strip" id="presetPillStrip" role="tablist" aria-label="Quick Outlier Presets">
+            <button type="button" class="preset-pill on" data-pill-preset="all">All Videos</button>
+            <button type="button" class="preset-pill" data-pill-preset="formula63k">🏆 Fórmula $63k (Claude & Nexlev)</button>
+            <button type="button" class="preset-pill" data-pill-preset="small">Viral on small channels</button>
+            <button type="button" class="preset-pill" data-pill-preset="medium">Viral on medium channels</button>
+            <button type="button" class="preset-pill" data-pill-preset="above1m">Above 1M Views</button>
+            <button type="button" class="preset-pill" data-pill-preset="outlier">High Outlier (10x+)</button>
+            <button type="button" class="preset-pill" data-pill-preset="few">High Views, Few Videos</button>
+            <button type="button" class="preset-pill" data-pill-preset="doc_newcomers">Viral Doc Newcomers</button>
+            <button type="button" class="preset-pill" data-pill-preset="recent">Recent (≤ 30d)</button>
+            <button type="button" class="preset-pill" data-pill-preset="arbitrage">💎 Arbitragem BR</button>
+          </div>
+
+          <section class="research-complete-banner" id="researchCompleteBanner" hidden>
+            <div class="complete-banner-icon">🎉</div>
+            <div class="complete-banner-content">
+              <div class="complete-banner-title">
+                <strong id="completeBannerHeading">Pesquisa Concluída com Sucesso!</strong>
+                <span class="complete-banner-badge" id="completeBannerBadge">100% Finalizado</span>
+              </div>
+              <p id="completeBannerSub">Canais e vídeos minerados. Clique nos atalhos para analisar as melhores oportunidades faceless.</p>
+            </div>
+            <div class="complete-banner-actions">
+              <button type="button" class="complete-action-btn" id="bannerQuickBaby">🍼 Canais Bebês</button>
+              <button type="button" class="complete-action-btn" id="bannerQuickOutlier">🚀 Outliers Puros</button>
+              <button type="button" class="complete-action-btn" id="bannerQuick63k">🏆 Fórmula $63k</button>
+            </div>
+          </section>
+
+          <!-- Executive KPI Summary Bar -->
+          <div class="results-kpi-strip" id="resultsKpiStrip" hidden>
+            <div class="kpi-card-modern kpi-total">
+              <span class="kpi-icon">🎯</span>
+              <div class="kpi-info">
+                <small>Oportunidades</small>
+                <strong id="kpiTotalCount">0 vídeos</strong>
+              </div>
+            </div>
+            <div class="kpi-card-modern kpi-outlier">
+              <span class="kpi-icon">🔥</span>
+              <div class="kpi-info">
+                <small>Top Outlier</small>
+                <strong id="kpiTopOutlier">—</strong>
+              </div>
+            </div>
+            <div class="kpi-card-modern kpi-baby">
+              <span class="kpi-icon">🍼</span>
+              <div class="kpi-info">
+                <small>Canais Bebês (≤60d)</small>
+                <strong id="kpiBabyCount">0</strong>
+              </div>
+            </div>
+            <div class="kpi-card-modern kpi-arbitrage">
+              <span class="kpi-icon">💎</span>
+              <div class="kpi-info">
+                <small>Minas de Ouro BR</small>
+                <strong id="kpiArbitrageCount">0</strong>
+              </div>
+            </div>
+            <div class="kpi-card-modern kpi-rpm">
+              <span class="kpi-icon">💰</span>
+              <div class="kpi-info">
+                <small>RPM Médio Estimado</small>
+                <strong id="kpiAvgRpm">—</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Niche Subtopic Cloud Bar -->
+          <div class="niche-tag-cloud" id="nicheTagCloud" hidden>
+            <span class="niche-cloud-label">Sub-nichos:</span>
+            <div class="niche-cloud-chips" id="nicheCloudChips"></div>
+          </div>
+
+          <div class="stat-grid">
+            <div class="metric"><strong id="metricVideos">0</strong><span>Videos</span></div>
+            <div class="metric"><strong id="metricChannels">0</strong><span>Channels</span></div>
+            <div class="metric"><strong id="metricViews">0</strong><span>Total views</span></div>
+            <div class="metric"><strong id="metricOutlier">0x</strong><span>Top outlier</span></div>
+            <div class="metric"><strong id="metricSaved">0</strong><span>Saved</span></div>
+          </div>
+          <div class="research-funnel" id="researchFunnel" hidden>
+            <div><strong id="funnelDiscovered">0</strong><span>Descobertos</span></div>
+            <div><strong id="funnelIdentified">0</strong><span>Canais mapeados</span></div>
+            <div><strong id="funnelPending">0</strong><span>Aguardam dados</span></div>
+            <div><strong id="funnelFaceless">0</strong><span>Faceless</span></div>
+            <div><strong id="funnelEligible">0</strong><span>Elegíveis</span></div>
+            <div><strong id="funnelHidden">0</strong><span>Ocultados</span></div>
+          </div>
+
+          <div class="channel-grid" id="channelGrid"></div>
+
+          <section class="niche-shell" id="nicheShell" hidden>
+            <div class="niche-head">
+              <div class="section-title">Niche signals</div>
+              <div class="section-sub">Repeated topics across channels</div>
+            </div>
+            <div class="niche-grid" id="nicheGrid"></div>
+          </section>
+
+          <div class="insights" id="insights" hidden></div>
+          <div class="warnings" id="warnings" hidden></div>
+          <div class="errors" id="errors" hidden></div>
+          <div class="results-grid" id="resultsGrid"></div>
+          <div class="results-table-wrap" id="resultsTableWrap" hidden>
+            <div class="results-table-responsive">
+              <table class="results-table-modern" id="resultsTable">
+                <thead>
+                  <tr>
+                    <th class="col-thumb">Thumb</th>
+                    <th class="col-video">Vídeo & Título</th>
+                    <th class="col-channel">Canal</th>
+                    <th class="col-metric">Views</th>
+                    <th class="col-metric">VPH</th>
+                    <th class="col-metric">Outlier</th>
+                    <th class="col-metric">RPM Est.</th>
+                    <th class="col-actions">Ações de IA</th>
+                  </tr>
+                </thead>
+                <tbody id="resultsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <section class="expedition-shell" id="expeditionShell" hidden>
+            <div class="expedition-metrics">
+              <div><strong id="expChannelsFound">0</strong><span>Discovered</span></div>
+              <div><strong id="expChannelsScanned">0</strong><span>Scanned</span></div>
+              <div><strong id="expVideosEvaluated">0</strong><span>Evaluated</span></div>
+              <div><strong id="expQueueDepth">0</strong><span>Queue</span></div>
+              <div><strong id="expNovelty">0%</strong><span>Novelty</span></div>
+              <div><strong id="expVelocity">0</strong><span>Channels/min</span></div>
+            </div>
+            <div class="activity-feed" id="activityFeed"></div>
+          </section>
+        </section>
+      </section>
+
+      <section class="opportunities-workspace page-view" id="opportunitiesWorkspace" data-page-view="opportunities" hidden>
+        <header class="opportunities-hero">
+          <div>
+            <div class="kicker">Opportunity library</div>
+            <h1>Os canais que merecem atenção agora</h1>
+            <p>Curadoria local das pesquisas concluídas, com faceless verificado, recência e potencial explicável.</p>
+          </div>
+          <span class="opportunities-count" id="opportunitiesCount">0 canais</span>
+        </header>
+        <div class="opportunities-toolbar">
+          <div class="opportunity-tabs" role="tablist">
+            <button class="on" type="button" data-opportunity-view="recommended">
+              <span>Recomendados</span>
+              <em class="tab-badge" id="badgeRecommended">0</em>
+            </button>
+            <button type="button" data-opportunity-view="favorites">
+              <span>Favoritos ⭐</span>
+              <em class="tab-badge" id="badgeFavorites">0</em>
+            </button>
+            <button type="button" data-opportunity-view="blueprints">
+              <span>Blueprints 📑</span>
+              <em class="tab-badge" id="badgeBlueprints">0</em>
+            </button>
+            <button type="button" data-opportunity-view="review">
+              <span>Em Análise</span>
+              <em class="tab-badge" id="badgeReview">0</em>
+            </button>
+          </div>
+          <div class="opportunity-subtabs" id="opportunityFavoritesSubtabs" hidden>
+            <button class="subtab-btn on" type="button" data-fav-subtab="all">Tudo</button>
+            <button class="subtab-btn" type="button" data-fav-subtab="channels">Canais (<span id="countFavChannels">0</span>)</button>
+            <button class="subtab-btn" type="button" data-fav-subtab="videos">Vídeos (<span id="countFavVideos">0</span>)</button>
+          </div>
+          <label class="field opportunity-filter"><span>Filtro</span><select id="opportunityPreset">
+            <option value="all">Todos</option>
+            <option value="arbitrage">💎 Arbitragem Internacional (Mina de Ouro BR)</option>
+            <option value="outliers">Outliers</option>
+            <option value="avg-new">Média alta e canal novo</option>
+            <option value="low-subs-high-views">Poucos subs, muitas views</option>
+            <option value="above50k">Acima de 50K views médias</option>
+            <option value="new">Canais novos</option>
+            <option value="quality-high">Qualidade alta</option>
+            <option value="quality-medium">Qualidade média</option>
+            <option value="quality-low">Qualidade baixa</option>
+          </select></label>
+          <label class="switch"><input id="opportunityHideSeen" type="checkbox"><span>Ocultar vistos</span></label>
+          <div class="search opportunity-search-wrap">
+            <span>Pesquisar</span>
+            <input id="opportunitySearch" placeholder="canal, vídeo ou nicho">
+            <button type="button" id="clearOpportunitySearchBtn" class="clear-search-btn" title="Limpar busca" hidden>×</button>
+          </div>
+          <button type="button" class="tool-action-btn tool-blueprint" id="exportMasterdeckBtn" title="Exportar Dossiê de Produção e Estratégia de Conteúdo (.md)">📥 Exportar Masterdeck (.md)</button>
+        </div>
+        <div class="opportunity-active-filters" id="opportunityActiveFilters" hidden><span></span><button type="button" id="clearOpportunityFilters">Limpar filtros</button></div>
+        <div class="opportunities-summary" id="opportunitiesSummary"></div>
+        <details class="format-map-disclosure">
+          <summary>Mapa de formatos <span>Insights do catálogo local</span></summary>
+          <div class="opportunity-format-map" id="opportunityFormatMap" aria-label="Opportunity format map"></div>
+        </details>
+        <div class="opportunity-content-wrap" id="opportunityContentWrap">
+          <div class="channel-grid opportunity-grid" id="opportunitiesGrid"></div>
+          <div class="saved-videos-section" id="opportunitySavedVideosSection" hidden>
+            <div class="section-title">
+              <h3>⭐ Vídeos Salvos</h3>
+              <span id="opportunitySavedVideosCount">0 vídeos</span>
+            </div>
+            <div class="results-grid" id="opportunitySavedVideosGrid"></div>
+          </div>
+          <div class="blueprints-section" id="opportunityBlueprintsSection" hidden>
+            <div class="section-title">
+              <div>
+                <h3>📑 Fábrica de Roteiros & Blueprints Virais</h3>
+                <p style="margin: 2px 0 0; font-size: 12px; color: var(--muted);">Dossiês completos gerados prontos para gravação e produção.</p>
+              </div>
+              <span id="opportunityBlueprintsCount">0 roteiros</span>
+            </div>
+            <div class="blueprints-grid" id="opportunityBlueprintsGrid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-workspace page-view" id="settingsWorkspace" data-page-view="settings" hidden>
+        <header class="settings-hero">
+          <div>
+            <div class="kicker" data-i18n="settings.kicker">Settings Studio</div>
+            <h1 data-i18n="settings.title">Shape your research space</h1>
+            <p data-i18n="settings.subtitle">Preferences are shared by the web dashboard and desktop application.</p>
+          </div>
+          <div class="save-state" id="saveState" data-state="saved"><span></span><b data-i18n="save.saved">Saved</b></div>
+        </header>
+
+        <div class="settings-layout">
+          <nav class="settings-section-nav" aria-label="Settings categories" role="tablist">
+            <button class="on" type="button" data-settings-section="appearance" role="tab" aria-selected="true"><svg><use href="lucide-sprite.svg#sparkles"></use></svg><span data-i18n="settings.appearanceNav">Appearance</span></button>
+            <button type="button" data-settings-section="research" role="tab" aria-selected="false"><svg><use href="lucide-sprite.svg#search"></use></svg><span data-i18n="settings.researchNav">Research</span></button>
+            <button type="button" data-settings-section="desktop" role="tab" aria-selected="false"><svg><use href="lucide-sprite.svg#monitor"></use></svg><span data-i18n="settings.desktopNav">Desktop</span></button>
+            <button type="button" data-settings-section="integrations" role="tab" aria-selected="false"><svg><use href="lucide-sprite.svg#plug"></use></svg><span data-i18n="settings.integrationsNav">Integrations</span></button>
+            <button type="button" data-settings-section="data" role="tab" aria-selected="false"><svg><use href="lucide-sprite.svg#database"></use></svg><span data-i18n="settings.dataNav">Data</span></button>
+          </nav>
+          <div class="settings-content" data-active-section="appearance">
+          <div class="settings-sections">
+          <section class="settings-band" data-section="appearance">
+            <div class="settings-copy"><span>01</span><h2 data-i18n="section.appearance">Appearance</h2><p data-i18n="section.appearanceHelp">Theme, interface language and motion personality.</p></div>
+            <div class="settings-controls">
+              <div class="setting-row"><div><b data-i18n="setting.theme">Theme</b><small data-i18n="setting.themeHelp">Follow the device or choose a fixed appearance.</small></div><div class="segmented" data-setting="appearance.theme"><button data-value="auto">Auto</button><button data-value="light">Light</button><button data-value="dark">Dark</button></div></div>
+              <div class="setting-row"><div><b data-i18n="setting.language">Interface language</b><small data-i18n="setting.languageHelp">Applied to the app, tray and notifications.</small></div><div class="segmented" data-setting="appearance.language"><button data-value="system">System</button><button data-value="pt">Português</button><button data-value="en">English</button></div></div>
+            </div>
+          </section>
+
+          <section class="settings-band" data-section="research" hidden>
+            <div class="settings-copy"><span>02</span><h2 data-i18n="section.research">Research defaults</h2><p data-i18n="section.researchHelp">Used for new expeditions without changing active work.</p></div>
+            <div class="settings-controls settings-grid">
+              <label class="field"><span data-i18n="setting.mode">Research mode</span><select data-setting-input="research.mode"><option value="auto">Auto researcher</option><option value="browser">Local browser</option><option value="http">Fast HTTP</option><option value="api">API precision</option></select></label>
+              <label class="field"><span data-i18n="setting.budget">Expedition length</span><select data-setting-input="research.timeBudget"><option value="15m">Quick · 15 min</option><option value="2h">Deep · up to 2 h</option><option value="6h">Expedition · up to 6 h</option></select></label>
+              <label class="field"><span data-i18n="setting.duration">Video length</span><select data-setting-input="research.duration"><option value="long">Long-form</option><option value="deepLong">8+ min</option><option value="twentyLong">20+ min</option></select></label>
+              <label class="field"><span data-i18n="setting.region">Region</span><input maxlength="2" data-setting-input="research.region"></label>
+              <label class="field"><span data-i18n="setting.contentLanguage">Content language</span><input maxlength="8" data-setting-input="research.contentLanguage"></label>
+              <label class="field"><span data-i18n="setting.sort">Default sorting</span><select data-setting-input="research.sort"><option value="outlier">Outlier</option><option value="views">Views</option><option value="viewsPerDay">Velocity</option><option value="recent">Recent</option></select></label>
+              <label class="field"><span data-i18n="setting.initialView">Initial results view</span><select data-setting-input="research.initialView"><option value="channels">Channels</option><option value="videos">Videos</option><option value="niches">Niches</option></select></label>
+              <label class="field"><span>Maximum video age</span><select data-setting-input="research.maxVideoAgeDays"><option value="7">7 days</option><option value="30">30 days</option><option value="90">90 days</option></select></label>
+              <label class="field"><span>Faceless threshold</span><input type="number" min="45" max="90" step="1" data-setting-input="research.facelessThreshold"></label>
+              <label class="setting-toggle"><span><b>Gemini</b><small data-i18n="setting.geminiHelp">Optional niche clusters for new research.</small></span><input type="checkbox" data-setting-input="research.useGemini"><i></i></label>
+              <label class="setting-toggle"><span><b>Opportunity Scout</b><small>Rechecks promising channels in the background and measures real acceleration.</small></span><input type="checkbox" data-setting-input="research.scoutEnabled"><i></i></label>
+              <label class="field"><span>Scout interval</span><select data-setting-input="research.scoutIntervalHours"><option value="6">Every 6 hours</option><option value="12">Every 12 hours</option><option value="24">Every day</option><option value="72">Every 3 days</option><option value="168">Every week</option></select></label>
+
+              <div class="settings-profiles-panel">
+                <div class="settings-profiles-head">
+                  <b>Perfis de Navegador (Contas Google Aquecidas)</b>
+                  <small>Faça login em contas reais para treinar o algoritmo do YouTube em nichos específicos.</small>
+                </div>
+                <div class="profile-cards-grid">
+                  <div class="profile-card" data-profile-id="profile-1">
+                    <div class="profile-card-header">
+                      <span class="profile-avatar">👤</span>
+                      <div>
+                        <input class="profile-name-input" id="profile1NameInput" value="Perfil 1 (Nicho A)" placeholder="Nome do perfil">
+                        <input class="profile-niche-input" id="profile1NicheInput" value="História & Mistérios" placeholder="Nicho específico">
+                      </div>
+                      <span class="profile-auth-status" id="profile1SettingsAuthBadge">⚪ Não logado</span>
+                    </div>
+                    <div class="profile-card-actions">
+                      <button type="button" class="profile-action-btn primary" id="openLoginProfile1Btn"><svg><use href="lucide-sprite.svg#key"></use></svg><span>Login & Aquecer</span></button>
+                      <button type="button" class="profile-action-btn" id="saveProfile1Btn"><span>Salvar</span></button>
+                      <button type="button" class="profile-action-btn danger" id="clearProfile1Btn"><span>Limpar</span></button>
+                    </div>
+                  </div>
+
+                  <div class="profile-card" data-profile-id="profile-2">
+                    <div class="profile-card-header">
+                      <span class="profile-avatar">👤</span>
+                      <div>
+                        <input class="profile-name-input" id="profile2NameInput" value="Perfil 2 (Nicho B)" placeholder="Nome do perfil">
+                        <input class="profile-niche-input" id="profile2NicheInput" value="Finanças & Negócios" placeholder="Nicho específico">
+                      </div>
+                      <span class="profile-auth-status" id="profile2SettingsAuthBadge">⚪ Não logado</span>
+                    </div>
+                    <div class="profile-card-actions">
+                      <button type="button" class="profile-action-btn primary" id="openLoginProfile2Btn"><svg><use href="lucide-sprite.svg#key"></use></svg><span>Login & Aquecer</span></button>
+                      <button type="button" class="profile-action-btn" id="saveProfile2Btn"><span>Salvar</span></button>
+                      <button type="button" class="profile-action-btn danger" id="clearProfile2Btn"><span>Limpar</span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="settings-band" data-section="desktop" hidden>
+            <div class="settings-copy"><span>03</span><h2 data-i18n="section.desktop">Desktop</h2><p data-i18n="section.desktopHelp">Windows startup, tray and notification behavior.</p></div>
+            <div class="settings-controls">
+              <label class="setting-toggle desktop-only"><span><b data-i18n="setting.startup">Start with Windows</b><small data-i18n="setting.startupHelp">Opens the application when you sign in.</small></span><input type="checkbox" data-setting-input="desktop.launchAtStartup"><i></i></label>
+              <label class="setting-toggle desktop-only"><span><b data-i18n="setting.tray">Continue in tray</b><small data-i18n="setting.trayHelp">Keep active expeditions running after closing the window.</small></span><input type="checkbox" data-setting-input="desktop.continueInTray"><i></i></label>
+              <div class="notification-options"><b data-i18n="setting.notifications">Notifications</b><label><input type="checkbox" data-setting-input="desktop.notifications.complete"><span data-i18n="notify.complete">Completed</span></label><label><input type="checkbox" data-setting-input="desktop.notifications.attention"><span data-i18n="notify.attention">Needs attention</span></label><label><input type="checkbox" data-setting-input="desktop.notifications.error"><span data-i18n="notify.error">Errors</span></label></div>
+              <button class="settings-action desktop-only" id="openDataBtn" type="button"><svg><use href="lucide-sprite.svg#folder"></use></svg><span data-i18n="action.openData">Open data folder</span></button>
+              <p class="capability-note" id="desktopCapabilityNote" hidden data-i18n="desktop.required">These options require the desktop application.</p>
+            </div>
+          </section>
+
+          <section class="settings-band" data-section="integrations" hidden>
+            <div class="settings-copy">
+              <span>04</span>
+              <h2>Integrações & Sentinel</h2>
+              <p>Monitoramento 24/7 autônomo, alertas no Telegram, Discord e status das APIs.</p>
+            </div>
+            <div class="settings-controls integration-list">
+              <div class="sentinel-box">
+                <div class="sentinel-box-header">
+                  <div>
+                    <b>📡 Radar Sentinel 24/7 (Modo Segundo Plano)</b>
+                    <small>Executa micro-scouts silenciosos no Tray e dispara alertas instantâneos de Super Outliers.</small>
+                  </div>
+                  <label class="setting-toggle">
+                    <input type="checkbox" data-setting-input="sentinel.enabled">
+                    <i></i>
+                  </label>
+                </div>
+
+                <div class="sentinel-settings-grid">
+                  <label class="field">
+                    <span>Intervalo de Varredura</span>
+                    <select data-setting-input="sentinel.intervalMinutes">
+                      <option value="15">A cada 15 minutos</option>
+                      <option value="30">A cada 30 minutos (Padrão)</option>
+                      <option value="60">A cada 1 hora</option>
+                      <option value="120">A cada 2 horas</option>
+                    </select>
+                  </label>
+                  <label class="field">
+                    <span>Multiplicador Mínimo Outlier</span>
+                    <select data-setting-input="sentinel.minMultiplier">
+                      <option value="2.0">≥ 2.0x da base</option>
+                      <option value="3.0">≥ 3.0x da base (Recomendado)</option>
+                      <option value="5.0">≥ 5.0x da base</option>
+                      <option value="10.0">≥ 10.0x (Viral Extremo)</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="sentinel-triggers-panel" style="margin-top: 14px; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                  <b style="font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.5px; display: block; margin-bottom: 8px;">Gatilhos Autônomos Ativos</b>
+                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;">
+                    <label class="setting-check-item" style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text); cursor:pointer;">
+                      <input type="checkbox" data-setting-input="sentinel.allowBabyChannels">
+                      <span>🍼 Canais Bebês (≤ 60 dias)</span>
+                    </label>
+                    <label class="setting-check-item" style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text); cursor:pointer;">
+                      <input type="checkbox" data-setting-input="sentinel.allowArbitrage">
+                      <span>💎 Minas de Ouro BR (Arbitragem)</span>
+                    </label>
+                    <label class="setting-check-item" style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text); cursor:pointer;">
+                      <input type="checkbox" data-setting-input="sentinel.allowVphSpike">
+                      <span>⚡ Breakout Velocity (Pico VPH)</span>
+                    </label>
+                    <label class="setting-check-item" style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text); cursor:pointer;">
+                      <input type="checkbox" data-setting-input="sentinel.autoGenerateBlueprints">
+                      <span>📑 Auto-Gerar Blueprints no App</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="sentinel-channels-grid">
+                  <!-- Telegram -->
+                  <div class="sentinel-channel-card">
+                    <div class="sentinel-card-title">
+                      <span class="sentinel-icon telegram">✈️</span>
+                      <div>
+                        <b>Telegram Bot Alert</b>
+                        <small>Mensagens ricas com foto da thumbnail e link direto.</small>
+                      </div>
+                      <label class="setting-toggle">
+                        <input type="checkbox" data-setting-input="sentinel.telegramEnabled">
+                        <i></i>
+                      </label>
+                    </div>
+                    <div class="sentinel-inputs">
+                      <input type="password" data-setting-input="sentinel.telegramToken" placeholder="Bot Token (ex: 712345:AAF...)">
+                      <input type="text" data-setting-input="sentinel.telegramChatId" placeholder="Chat ID (ex: 123456789 ou @canal)">
+                    </div>
+                    <button type="button" class="sentinel-test-btn" id="testTelegramAlertBtn">
+                      <span>🔔 Enviar Alerta de Teste</span>
+                    </button>
+                  </div>
+
+                  <!-- Discord -->
+                  <div class="sentinel-channel-card">
+                    <div class="sentinel-card-title">
+                      <span class="sentinel-icon discord">🎮</span>
+                      <div>
+                        <b>Discord Webhook</b>
+                        <small>Embed formatado com imagem e métricas no canal de texto.</small>
+                      </div>
+                      <label class="setting-toggle">
+                        <input type="checkbox" data-setting-input="sentinel.discordEnabled">
+                        <i></i>
+                      </label>
+                    </div>
+                    <div class="sentinel-inputs">
+                      <input type="password" data-setting-input="sentinel.discordWebhook" placeholder="URL do Webhook do Discord">
+                    </div>
+                    <button type="button" class="sentinel-test-btn" id="testDiscordAlertBtn">
+                      <span>🔔 Enviar Alerta de Teste</span>
+                    </button>
+                  </div>
+
+                  <!-- Generic Webhook (Zapier / Make / n8n / Notion) -->
+                  <div class="sentinel-channel-card">
+                    <div class="sentinel-card-title">
+                      <span class="sentinel-icon webhook" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">🔗</span>
+                      <div>
+                        <b>Webhook Customizado (Make / Zapier / n8n)</b>
+                        <small>Despacha JSON completo de cada oportunidade para automações externas.</small>
+                      </div>
+                      <label class="setting-toggle">
+                        <input type="checkbox" data-setting-input="sentinel.webhookEnabled">
+                        <i></i>
+                      </label>
+                    </div>
+                    <div class="sentinel-inputs">
+                      <input type="password" data-setting-input="sentinel.webhookUrl" placeholder="URL do Webhook (ex: https://hook.eu1.make.com/...)">
+                    </div>
+                    <button type="button" class="sentinel-test-btn" id="testGenericWebhookBtn">
+                      <span>🔔 Enviar Alerta de Teste</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="sentinel-actions-row">
+                  <button type="button" class="sentinel-trigger-btn" id="triggerSentinelCycleBtn">
+                    <span>⚡ Executar Varredura Sentinel Agora</span>
+                  </button>
+                  <div class="sentinel-status-text" id="sentinelStatusLabel">Status: Inativo</div>
+                </div>
+              </div>
+
+              <div style="margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px;">
+                <b style="font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;">APIs e Navegador Local</b>
+              </div>
+              <div class="integration-row"><div><span class="integration-dot"></span><b>YouTube Data API</b><small id="settingsYoutubeStatus">Checking</small></div><button class="settings-action" data-test-provider="youtube" data-i18n="action.test" type="button">Test</button></div>
+              <div class="integration-row"><div><span class="integration-dot"></span><b>Gemini</b><small id="settingsGeminiStatus">Checking</small></div><button class="settings-action" data-test-provider="gemini" data-i18n="action.test" type="button">Test</button></div>
+              <div class="integration-row"><div><span class="integration-dot"></span><b data-i18n="integration.browser">Local browser</b><small id="settingsBrowserStatus">Checking</small></div><button class="settings-action" data-test-provider="browser" data-i18n="action.test" type="button">Test</button></div>
+            </div>
+          </section>
+
+          <section class="settings-band" data-section="data" hidden>
+            <div class="settings-copy"><span>05</span><h2 data-i18n="section.data">Data & recovery</h2><p data-i18n="section.dataHelp">Inspect storage, clean caches and move preferences safely.</p></div>
+            <div class="settings-controls">
+              <div class="storage-grid"><div><strong id="storageTotal">—</strong><span data-i18n="storage.total">Local data</span></div><div><strong id="storageDb">—</strong><span>SQLite</span></div><div><strong id="storageProfile">—</strong><span>Chromium</span></div><div><strong id="storageEntities">—</strong><span data-i18n="storage.entities">Indexed items</span></div></div>
+              <div class="profile-manager desktop-only"><div><b data-i18n="profile.title">Anonymous profiles by niche</b><small id="browserProfileSummary">No profile created</small></div><div><button class="settings-action" id="clearCurrentProfileBtn" data-i18n="profile.clearCurrent" type="button">Clear current profile</button><button class="settings-action danger" id="clearAllProfilesBtn" data-i18n="profile.clearAll" type="button">Clear all</button></div></div>
+              <div class="data-actions"><button class="settings-action" id="exportSettingsBtn" type="button"><svg><use href="lucide-sprite.svg#download"></use></svg><span data-i18n="action.export">Export settings</span></button><button class="settings-action" id="importSettingsBtn" type="button"><svg><use href="lucide-sprite.svg#upload"></use></svg><span data-i18n="action.import">Import settings</span></button><button class="settings-action" data-confirm-action="cache" type="button"><svg><use href="lucide-sprite.svg#rotate"></use></svg><span data-i18n="action.clearCache">Clear cache</span></button><button class="settings-action danger" data-confirm-action="history" type="button"><svg><use href="lucide-sprite.svg#trash"></use></svg><span data-i18n="action.clearHistory">Clear history</span></button><button class="settings-action" data-confirm-action="reset" type="button"><span data-i18n="action.reset">Reset settings</span></button></div>
+              <input id="settingsImportFile" type="file" accept="application/json,.json" hidden>
+            </div>
+          </section>
+          </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="channel-detail-layer" id="channelDetailLayer" hidden>
+    <button class="channel-detail-backdrop" id="channelDetailBackdrop" type="button" aria-label="Fechar detalhe do canal"></button>
+    <aside class="channel-detail" id="channelDetail" aria-label="Detalhe do canal">
+      <div class="channel-detail-loading" id="channelDetailLoading"><span></span><b>A carregar canal...</b></div>
+      <div id="channelDetailContent"></div>
+    </aside>
+  </div>
+
+  <div class="modal-backdrop" id="anglesModalBackdrop" hidden>
+    <div class="modal-sheet" id="anglesModalSheet">
+      <header class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-kicker">Auto-Ideation Engine</span>
+          <h2 id="anglesModalTitle">5 Ângulos Psicológicos Derivados</h2>
+          <p id="anglesModalSub">Hooks psicológicos de alta retenção baseados na estrutura vencedora deste vídeo.</p>
+        </div>
+        <button class="modal-close" id="closeAnglesModalBtn" type="button" aria-label="Fechar"><svg><use href="lucide-sprite.svg#close"></use></svg></button>
+      </header>
+      <div class="angles-list" id="anglesList"></div>
+      <footer class="modal-footer">
+        <button class="nex-btn nex-btn-copy-all" id="copyAllAnglesBtn" type="button"><svg><use href="lucide-sprite.svg#copy"></use></svg><span>Copiar Todos os 5</span></button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="network-alert-toast" id="networkAlertToast" hidden aria-live="assertive" role="alert">
+    <div class="network-alert-card">
+      <div class="network-alert-badge">
+        <span class="pulse-indicator"></span>
+        <span id="networkAlertBadgeText">INTERNET OFFLINE</span>
+      </div>
+      <div class="network-alert-body">
+        <div class="network-alert-icon-wrap">
+          <svg class="icon-offline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+            <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
+            <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+            <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
+            <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+            <line x1="12" y1="20" x2="12.01" y2="20"></line>
+          </svg>
+          <svg class="icon-reconnecting" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden>
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+          </svg>
+        </div>
+        <div class="network-alert-text">
+          <strong id="networkAlertTitle">Sem conexão com a internet</strong>
+          <p id="networkAlertMessage">A pesquisa foi pausada e a contagem de tempo está congelada. Assim que a conexão voltar, o YouTube será atualizado e a pesquisa retomada automaticamente.</p>
+          <div class="network-alert-status">
+            <span class="status-pulse-dot"></span>
+            <span id="networkAlertStatusText">Aguardando sinal de rede...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+  <div class="live-computer-layer" id="liveComputerLayer" hidden>
+    <section class="live-computer size-medium" id="liveComputer" role="dialog" aria-modal="false" aria-label="Computador de pesquisa ao vivo">
+      <header class="live-computer-head">
+        <div class="computer-title">
+          <span class="live-dot"></span>
+          <div><b id="computerTask">Pesquisador local</b><code id="computerUrl">Aguardando navegação</code></div>
+        </div>
+        <div class="computer-worker-tabs" id="computerWorkerTabs">
+          <button type="button" class="worker-tab on" data-worker-id="all">⚡ Todos</button>
+          <button type="button" class="worker-tab" data-worker-id="profile-1">👤 Perfil 1</button>
+          <button type="button" class="worker-tab" data-worker-id="profile-2">👤 Perfil 2</button>
+          <button type="button" class="worker-tab" data-worker-id="anonymous">🕶️ Anônimo</button>
+        </div>
+        <div class="computer-controls">
+          <div class="size-presets" aria-label="Tamanho"><button data-live-size="small" type="button">P</button><button class="on" data-live-size="medium" type="button">M</button><button data-live-size="large" type="button">G</button></div>
+          <button class="icon-control" id="refreshLiveComputerBtn" type="button" title="Recarregar página atual (Refresh)"><svg><use href="lucide-sprite.svg#rotate"></use></svg></button>
+          <button class="icon-control" id="homeLiveComputerBtn" type="button" title="Ir para o feed inicial do YouTube"><svg><use href="lucide-sprite.svg#youtube"></use></svg></button>
+          <button class="icon-control" id="popoutComputerBtn" type="button" title="Abrir em aba ou janela externa"><svg><use href="lucide-sprite.svg#external-link"></use></svg></button>
+          <button class="icon-control" id="minimizeComputerBtn" type="button" title="Minimizar"><svg><use href="lucide-sprite.svg#minimize"></use></svg></button>
+          <button class="icon-control" id="expandComputerBtn" type="button" title="Expandir janela"><svg><use href="lucide-sprite.svg#maximize"></use></svg></button>
+          <button class="icon-control" id="hideComputerBtn" type="button" title="Ocultar"><svg><use href="lucide-sprite.svg#close"></use></svg></button>
+        </div>
+      </header>
+      <div class="live-computer-screen" id="liveComputerScreen">
+        <div class="attention-banner-strip" id="attentionBannerStrip" hidden>
+          <span class="attention-pulse-icon">⚠️</span>
+          <span><b>Atenção:</b> YouTube solicitou verificação humana (captcha). Resolva na janela abaixo para continuar automaticamente.</span>
+        </div>
+        <img id="liveComputerFrame" alt="Preview ao vivo do pesquisador" hidden>
+        <div class="synthetic-computer" id="syntheticComputer">
+          <div class="synthetic-status-card">
+            <span class="live-dot"></span>
+            <div class="synthetic-status-info">
+              <b id="syntheticStatusTitle">Navegador Local em Operação</b>
+              <small id="syntheticAddress">youtube.com/research</small>
+            </div>
+            <button class="live-browser-tab-trigger" id="syntheticPopoutBtn" type="button"><svg><use href="lucide-sprite.svg#external-link"></use></svg><span>Abrir Janela Externa</span></button>
+          </div>
+        </div>
+        <div class="frame-loading" id="frameLoading"><span></span><b>Ligando ao pesquisador...</b></div>
+      </div>
+      <footer class="live-computer-foot"><div class="computer-progress"><span id="computerProgress"></span></div><span id="computerWorker">Worker 1/1</span><span id="computerSource">Browser</span><span id="computerLatency">— ms</span><b id="computerLiveState">AO VIVO</b></footer>
+      <div class="computer-resize-handle" aria-hidden="true"></div>
+    </section>
+  </div>
+  <dialog class="confirm-dialog" id="confirmDialog"><form method="dialog"><div class="dialog-mark">!</div><h2 id="confirmTitle">Confirm action</h2><p id="confirmMessage"></p><div><button value="cancel" class="settings-action">Cancel</button><button value="confirm" class="settings-action danger" id="confirmAccept">Confirm</button></div></form></dialog>
+
+  <dialog class="viral-angles-dialog" id="viralAnglesDialog">
+    <div class="angles-modal-card">
+      <header class="angles-head">
+        <div class="angles-title-box">
+          <span class="angles-sparkle">⚡</span>
+          <div>
+            <h3>3 Ângulos Virais & Ganchos de Roteiro</h3>
+            <p id="anglesSourceTitle">Analisando vídeo...</p>
+          </div>
+        </div>
+        <button type="button" class="close-angles-btn" id="closeAnglesBtn"><svg><use href="lucide-sprite.svg#close"></use></svg></button>
+      </header>
+      <div class="angles-body" id="anglesBody">
+        <div class="angles-loading"><span></span><b>Gerando ângulos de alta retenção...</b></div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="deconstructor-dialog" id="videoDeconstructorDialog">
+    <div class="deconstructor-card">
+      <header class="deconstructor-head">
+        <div class="deconstructor-hero">
+          <img class="deconstructor-thumb" id="deconstructorThumb" src="" alt="Thumbnail" />
+          <div class="deconstructor-meta">
+            <div class="deconstructor-badges">
+              <span class="deconstructor-badge" id="deconstructorMultiplierBadge">⚡ OUTLIER</span>
+              <span class="deconstructor-badge archetype-badge" id="deconstructorArchetypeBadge">🎣 GAP DE CURIOSIDADE</span>
+            </div>
+            <h3 id="deconstructorTitle">Engenharia Reversa de Retenção</h3>
+            <p id="deconstructorChannel">Canal · 0 visualizações</p>
+          </div>
+        </div>
+        <button type="button" class="close-deconstructor-btn" id="closeDeconstructorBtn"><svg><use href="lucide-sprite.svg#close"></use></svg></button>
+      </header>
+
+      <div class="deconstructor-body" id="deconstructorBody">
+        <div class="deconstructor-loading">
+          <span></span>
+          <b>Dissecando estrutura de retenção, gancho inicial e transcrição...</b>
+        </div>
+      </div>
+
+      <footer class="deconstructor-foot" id="deconstructorFoot" hidden>
+        <button class="deconstructor-copy-all-btn" id="copyFullBlueprintBtn" type="button">
+          <svg><use href="lucide-sprite.svg#copy"></use></svg>
+          <span>Copiar Blueprint Completo (Roteiro + Prompts de Thumb)</span>
+        </button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog class="blueprint-modal-dialog" id="viralBlueprintModal">
+    <div class="blueprint-modal-card">
+      <header class="blueprint-modal-head">
+        <div class="blueprint-modal-hero">
+          <img class="blueprint-modal-thumb" id="blueprintModalThumb" src="" alt="Thumbnail" />
+          <div class="blueprint-modal-meta">
+            <div class="blueprint-modal-badges">
+              <span class="blueprint-badge highlight" id="blueprintModalMultiplierBadge">⚡ OUTLIER</span>
+              <span class="blueprint-badge" id="blueprintModalStyleBadge">🎬 DOCUMENTARY</span>
+            </div>
+            <h3 id="blueprintModalTitle">Fábrica de Roteiro & Produção</h3>
+            <p id="blueprintModalChannel">Canal · 0 views</p>
+          </div>
+        </div>
+        <button type="button" class="close-blueprint-btn" id="closeBlueprintModalBtn"><svg><use href="lucide-sprite.svg#close"></use></svg></button>
+      </header>
+
+      <div class="blueprint-style-bar">
+        <span>Estilo de Roteiro:</span>
+        <div class="blueprint-style-pills" id="blueprintStylePills">
+          <button type="button" class="style-pill on" data-style="documentary">🎬 Faceless Documentary</button>
+          <button type="button" class="style-pill" data-style="storytelling">🔥 Storytelling Retenção</button>
+          <button type="button" class="style-pill" data-style="explanatory">⚡ Revelação Direta</button>
+        </div>
+      </div>
+
+      <nav class="blueprint-tabs" role="tablist">
+        <button class="on" type="button" data-bp-tab="script">📜 Roteiro Estruturado</button>
+        <button type="button" data-bp-tab="thumbnails">🎨 Thumbnails A/B (3 Conceitos)</button>
+        <button type="button" data-bp-tab="titles">🎯 Títulos de Alta CTR & Tags</button>
+      </nav>
+
+      <div class="blueprint-modal-body" id="blueprintModalBody">
+        <div class="blueprint-loading">
+          <span></span>
+          <b>Sintetizando roteiro, cenas, prompts de imagem e gatilhos de retenção...</b>
+        </div>
+      </div>
+
+      <footer class="blueprint-modal-foot" id="blueprintModalFoot" hidden>
+        <div class="blueprint-foot-left">
+          <button class="bp-btn outline" id="saveToMyBlueprintsBtn" type="button">
+            <span>⭐ Salvar nos Meus Blueprints</span>
+          </button>
+        </div>
+        <div class="blueprint-foot-right">
+          <button class="bp-btn secondary" id="copyScriptOnlyBtn" type="button">
+            <svg><use href="lucide-sprite.svg#copy"></use></svg>
+            <span>Copiar Roteiro</span>
+          </button>
+          <button class="bp-btn primary" id="downloadMarkdownBtn" type="button">
+            <svg><use href="lucide-sprite.svg#download"></use></svg>
+            <span>Baixar Dossiê (.md)</span>
+          </button>
+        </div>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- Inovação 5: Modal Visual Thumb-Matrix AI Scanner -->
+  <dialog class="blueprint-modal-dialog" id="thumbMatrixModal">
+    <div class="blueprint-modal-card thumb-matrix-card">
+      <header class="blueprint-modal-head">
+        <div class="blueprint-modal-hero">
+          <span style="font-size: 28px; line-height: 1;">🎨</span>
+          <div class="blueprint-modal-meta">
+            <div class="blueprint-modal-badges">
+              <span class="blueprint-badge highlight" id="thumbScoreBadge">CTR POTENTIAL 94/100</span>
+              <span class="blueprint-badge" id="thumbArchetypeBadge">🎯 ARQUÉTIPO VISUAL</span>
+            </div>
+            <h3 id="thumbModalTitle">Visual Thumb-Matrix AI Scanner</h3>
+            <p id="thumbModalSubtitle">Decomposição Cromática, Harmonia e Engenharia Reversa do Clique</p>
+          </div>
+        </div>
+        <button type="button" class="close-blueprint-btn" id="closeThumbMatrixBtn"><svg><use href="lucide-sprite.svg#close"></use></svg></button>
+      </header>
+
+      <div class="thumb-matrix-body" id="thumbMatrixBody">
+        <div class="blueprint-loading">
+          <span></span>
+          <b>Escaneando espectro visual, pontos de contraste e densidade de texto...</b>
+        </div>
+      </div>
+
+      <footer class="blueprint-modal-foot" id="thumbMatrixFoot" hidden>
+        <div class="blueprint-foot-left">
+          <span style="font-size: 11px; color: var(--muted);" id="thumbHarmonyLabel">Harmonia: Contraste Volumétrico</span>
+        </div>
+        <div class="blueprint-foot-right">
+          <button class="bp-btn primary" id="copyThumbPromptsBtn" type="button">
+            <svg><use href="lucide-sprite.svg#copy"></use></svg>
+            <span>Copiar Prompts & Paleta</span>
+          </button>
+        </div>
+      </footer>
+    </div>
+  </dialog>
+
+  <script src="settings.js?v=4.6" defer></script>
+  <script src="app.js?v=4.6" defer></script>
+</body>
+</html>

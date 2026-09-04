@@ -1,0 +1,241 @@
+/* ==========================================================================
+   VIRAL RESEARCH — PROFESSIONAL MOTION & INTERACTION SYSTEM
+   ========================================================================== */
+
+:root {
+  --motion-fast: 130ms;
+  --motion-base: 220ms;
+  --motion-slow: 340ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+/* Base interactive smoothness */
+button,
+a,
+input,
+select,
+textarea,
+.nav-btn,
+.sidebar-toggle,
+.control-btn,
+.view-tab,
+.icon-control,
+.style-pill,
+.card-action-btn,
+.setting-toggle {
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    color var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease,
+    transform var(--motion-fast) var(--ease-out);
+}
+
+/* Tactile micro-press feedback */
+button:active:not(:disabled),
+.control-btn:active:not(:disabled),
+.nav-btn:active:not(:disabled),
+.style-pill:active,
+.bp-btn:active,
+.deconstructor-copy-all-btn:active {
+  transform: translateY(0.5px) scale(0.985);
+}
+
+/* Subtle hover elevation on primary action buttons */
+.run-btn:hover:not(:disabled),
+.bp-btn.primary:hover:not(:disabled),
+.deconstructor-copy-all-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(5, 201, 151, 0.32);
+}
+
+/* Universal accessible focus states */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: none !important;
+  box-shadow: var(--focus-ring) !important;
+}
+
+/* Disabled states */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.46 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+/* Dialog / Modal Smooth Motion */
+dialog {
+  opacity: 0;
+  transform: scale(0.97) translateY(10px);
+  transition:
+    opacity var(--motion-base) var(--ease-out),
+    transform var(--motion-base) var(--ease-out),
+    overlay var(--motion-base) var(--ease-out) allow-discrete,
+    display var(--motion-base) var(--ease-out) allow-discrete;
+}
+
+dialog[open] {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+@starting-style {
+  dialog[open] {
+    opacity: 0;
+    transform: scale(0.97) translateY(10px);
+  }
+}
+
+dialog::backdrop {
+  background: rgba(4, 8, 7, 0.68);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transition:
+    opacity var(--motion-base) ease,
+    overlay var(--motion-base) ease allow-discrete,
+    display var(--motion-base) ease allow-discrete;
+}
+
+dialog[open]::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  dialog[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+/* Interactive Card Transitions */
+.video-card,
+.channel-card-modern,
+.sentinel-channel-card,
+.arbitrage-card,
+.blueprint-card {
+  transition:
+    transform var(--motion-base) var(--ease-out),
+    border-color var(--motion-fast) ease,
+    box-shadow var(--motion-base) var(--ease-out),
+    background-color var(--motion-fast) ease;
+}
+
+.video-card:hover,
+.sentinel-channel-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md, 0 8px 24px rgba(0, 0, 0, 0.08));
+}
+
+/* High-efficiency GPU Skeleton Shimmer */
+@keyframes vpr-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton,
+.channel-card-skeleton span,
+.blueprint-loading span,
+.deconstructor-loading span {
+  background: linear-gradient(
+    90deg,
+    var(--card2) 0%,
+    color-mix(in srgb, var(--line) 40%, var(--card2)) 50%,
+    var(--card2) 100%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: vpr-shimmer 1.8s ease-in-out infinite !important;
+}
+
+/* Sentinel Radar & Live Outlier Pulses */
+@keyframes vpr-pulse-soft {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.96);
+  }
+}
+
+.sentinel-pulse,
+.mobile-connection-dot.live,
+.pulse {
+  animation: vpr-pulse-soft 2.4s ease-in-out infinite;
+}
+
+/* Toast Notifications Motion */
+#toastRegion {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: var(--radius-md, 8px);
+  font: 550 var(--text-sm, 12px)/1.4 var(--ff-body);
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--line2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.08);
+  transform-origin: bottom right;
+  animation: vpr-toast-in 220ms var(--ease-out) forwards;
+}
+
+.toast.success {
+  border-left: 4px solid var(--go);
+}
+
+.toast.info {
+  border-left: 4px solid var(--blue);
+}
+
+.toast.error {
+  border-left: 4px solid var(--red);
+}
+
+@keyframes vpr-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Strict Reduced-Motion Compliance */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "name": "viral-research",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local Viral Research Niche Finder.",
+  "main": "desktop/main.js",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check lib/research-store.js && node --check lib/opportunity-engine.js && node --check lib/sentinel-service.js && node --check lib/arbitrage-engine.js && node --check lib/thumb-analyzer.js && node --check lib/video-deconstructor.js && node --check lib/blueprint-generator.js && node --check public/theme-boot.js && node --check public/settings.js && node --check public/app.js && node --check desktop/main.js && node --check desktop/research-browser.js && node --check scripts/generate-icon.js && node --check scripts/package-portable.js && node --check scripts/apply-exe-icon.js && node --check scripts/publish-root-exe.js && node --check scripts/qa-fake-browser.js && node --check scripts/qa-autonomous.js && node --check scripts/qa-opportunity-engine.js && node --check scripts/qa-settings.js && node --check scripts/qa-presets.js && node --check scripts/qa-persistence.js && node --check scripts/qa-desktop-smoke.js && node --check scripts/qa-live-youtube.js && node --check scripts/qa-web.js && node --check scripts/qa-visual.js && node --check scripts/run-electron-dev.js && node --check scripts/prepare-portable.js && node --check scripts/qa-warmed-profiles.js && node --check scripts/qa-sentinel.js && node --check scripts/qa-sentinel-triggers.js && node --check scripts/qa-arbitrage.js && node --check scripts/qa-thumb-scanner.js && node --check scripts/qa-deconstructor.js && node --check scripts/qa-blueprint-generator.js && node --check scripts/qa-masterdeck-export.js && node --check scripts/qa-adversarial-product-flow.js && node --check scripts/qa-integrity-audit.js",
+    "generate:icon": "node scripts/generate-icon.js",
+    "desktop:dev": "npm run generate:icon && node scripts/run-electron-dev.js",
+    "desktop:build": "npm run generate:icon && node scripts/package-portable.js && node scripts/apply-exe-icon.js",
+    "desktop:dist": "npm run desktop:build && node scripts/prepare-portable.js && node scripts/publish-root-exe.js",
+    "qa:all": "npm run check && npm run qa:settings && npm run qa:opportunity && npm run qa:sentinel && npm run qa:arbitrage && npm run qa:blueprint && npm run qa:thumb && npm run qa:deconstructor && npm run qa:masterdeck && npm run qa:adversarial && npm run qa:integrity",
+    "qa:web": "node scripts/qa-web.js",
+    "qa:autonomous": "node scripts/qa-autonomous.js",
+    "qa:opportunity": "node scripts/qa-opportunity-engine.js",
+    "qa:settings": "node scripts/qa-settings.js",
+    "qa:presets": "node scripts/qa-presets.js",
+    "qa:persistence": "node scripts/qa-persistence.js",
+    "qa:profiles": "node scripts/qa-warmed-profiles.js",
+    "qa:desktop": "node scripts/qa-desktop-smoke.js",
+    "qa:visual": "node scripts/qa-visual.js",
+    "qa:live": "node scripts/qa-live-youtube.js",
+    "qa:sentinel": "node scripts/qa-sentinel.js && node scripts/qa-sentinel-triggers.js",
+    "qa:arbitrage": "node scripts/qa-arbitrage.js",
+    "qa:blueprint": "node scripts/qa-blueprint-generator.js",
+    "qa:masterdeck": "node scripts/qa-masterdeck-export.js",
+    "qa:adversarial": "node scripts/qa-adversarial-product-flow.js",
+    "qa:thumb": "node scripts/qa-thumb-scanner.js",
+    "qa:deconstructor": "node scripts/qa-deconstructor.js",
+    "qa:integrity": "node scripts/qa-integrity-audit.js",
+    "clean:qa": "node -e \"const fs = require('fs'); ['.qa-storage', '.qa-storage-profiles', '.chrome-qa', '.qa-storage-masterdeck', '.qa-storage-adversarial'].forEach(p => { if (fs.existsSync(p)) fs.rmSync(p, { recursive: true, force: true }); }); console.log('Cleaned QA temporary files.');\""
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "electron": "^42.7.1",
+    "rcedit": "^5.0.2"
+  }
+}

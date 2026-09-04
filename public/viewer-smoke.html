@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>YouTube research fixture</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #111; background: #fff; font: 14px Arial, sans-serif; }
+    header { position: sticky; top: 0; z-index: 4; display: flex; gap: 12px; padding: 82px 9% 18px; background: #fff; border-bottom: 1px solid #ddd; }
+    #search { width: min(620px, 72vw); height: 42px; padding: 0 16px; border: 1px solid #aaa; border-radius: 20px; font-size: 16px; }
+    main { width: min(1040px, 86vw); margin: 22px auto 90px; }
+    ytd-video-renderer, ytd-compact-video-renderer { display: grid; grid-template-columns: 300px 1fr; gap: 18px; min-height: 178px; margin: 0 0 18px; padding: 10px; border-radius: 10px; }
+    ytd-video-renderer:hover, ytd-compact-video-renderer:hover { background: #f4f4f4; }
+    .thumb { position: relative; display: block; height: 166px; overflow: hidden; border-radius: 9px; background: #16201d; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .duration { position: absolute; right: 7px; bottom: 7px; padding: 3px 5px; color: #fff; background: #000d; border-radius: 4px; font-weight: 700; }
+    #video-title { display: block; margin: 8px 0 12px; color: #111; font-size: 18px; font-weight: 700; text-decoration: none; }
+    ytd-channel-name a { color: #555; text-decoration: none; }
+    #metadata-line { display: flex; gap: 9px; margin-top: 8px; color: #666; }
+    #watch { display: none; }
+    #watch.active { display: block; }
+    #watch video { width: 100%; aspect-ratio: 16/9; background: #07120f; border-radius: 10px; }
+    #watch h1 { margin: 17px 0 12px; font-size: 24px; }
+    #owner { display: flex; gap: 14px; align-items: center; margin-bottom: 36px; }
+    #owner-sub-count { color: #666; }
+    #related { padding-top: 14px; border-top: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <header><input id="search" name="search_query" placeholder="Search"><button id="search-icon-legacy" type="button">Search</button></header>
+  <main><section id="results"></section><section id="watch"></section></main>
+  <script>
+    const videos = Array.from({ length: 12 }, (_, index) => ({
+      id: `fixture${String(index + 1).padStart(4, '0')}`.slice(0, 11),
+      title: `${index < 6 ? 'Faceless business documentary' : 'Hidden technology story'} ${index + 1}`,
+      channel: `Fixture Channel ${index + 1}`,
+      channelPath: `/@fixture-channel-${index + 1}`,
+      views: 1800000 - index * 97000,
+      subscribers: 3200 + index * 730,
+      duration: 720 + index * 35,
+      ageDays: 2 + index
+    }));
+    const results = document.querySelector('#results');
+    const watch = document.querySelector('#watch');
+    const input = document.querySelector('#search');
+    const publishedAt = days => new Date(Date.now() - days * 86400000).toISOString();
+    const durationText = seconds => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+    const compact = value => `${(value / 1000000).toFixed(1)}M views`;
+
+    function card(video, compactMode = false) {
+      const node = document.createElement(compactMode ? 'ytd-compact-video-renderer' : 'ytd-video-renderer');
+      node.innerHTML = `<a class="thumb" href="https://www.youtube.com/watch?v=${video.id}"><img src="/favicon.png" alt=""><span class="duration">${durationText(video.duration)}</span></a><div><a id="video-title" href="https://www.youtube.com/watch?v=${video.id}">${video.title}</a><ytd-channel-name><a href="${video.channelPath}">${video.channel}</a></ytd-channel-name><div id="metadata-line"><span>${compact(video.views)}</span><span>${video.ageDays} days ago</span></div></div>`;
+      node.querySelectorAll('a[href*="watch?v="]').forEach(link => link.addEventListener('click', event => {
+        event.preventDefault();
+        renderWatch(video.id);
+      }));
+      return node;
+    }
+
+    function renderResults(query = 'faceless outliers') {
+      watch.classList.remove('active');
+      watch.replaceChildren();
+      results.hidden = false;
+      results.replaceChildren(...videos.map(video => card(video)));
+      history.pushState({}, '', `/results?search_query=${encodeURIComponent(query)}`);
+      document.title = `${query} - YouTube`;
+    }
+
+    function renderWatch(id) {
+      const current = videos.find(video => video.id === id) || videos[0];
+      const related = videos.filter(video => video.id !== current.id).slice(0, 8);
+      results.hidden = true;
+      watch.classList.add('active');
+      watch.innerHTML = `<video muted></video><h1>${current.title}</h1><div id="owner"><ytd-channel-name id="channel-name"><a href="${current.channelPath}">${current.channel}</a></ytd-channel-name><span id="owner-sub-count">${current.subscribers.toLocaleString('en-US')} subscribers</span><span class="view-count">${current.views} views</span></div><div id="related"><h2>Recommended</h2></div>`;
+      watch.querySelector('#related').append(...related.map(video => card(video, true)));
+      const player = watch.querySelector('video');
+      let time = 0;
+      let paused = true;
+      Object.defineProperties(player, {
+        currentTime: { configurable: true, get: () => time },
+        duration: { configurable: true, get: () => current.duration },
+        paused: { configurable: true, get: () => paused },
+        readyState: { configurable: true, get: () => 4 }
+      });
+      player.play = () => { paused = false; return Promise.resolve(); };
+      setInterval(() => { if (!paused) time += 1; }, 300);
+      window.ytInitialPlayerResponse = {
+        videoDetails: { videoId: current.id, title: current.title, lengthSeconds: String(current.duration), viewCount: String(current.views), channelId: `UC${current.id.padEnd(22, 'x')}`, author: current.channel, isLiveContent: false },
+        microformat: { playerMicroformatRenderer: { publishDate: publishedAt(current.ageDays), uploadDate: publishedAt(current.ageDays) } }
+      };
+      history.pushState({}, '', `/watch?v=${current.id}`);
+      document.title = `${current.title} - YouTube`;
+    }
+
+    input.addEventListener('keydown', event => { if (event.key === 'Enter') renderResults(input.value.trim() || 'faceless outliers'); });
+    document.querySelector('#search-icon-legacy').addEventListener('click', () => renderResults(input.value.trim() || 'faceless outliers'));
+    const target = new URLSearchParams(location.search).get('target') || '';
+    if (target.includes('/watch')) renderWatch(new URL(target).searchParams.get('v'));
+    else renderResults(new URL(target || 'https://www.youtube.com/results?search_query=faceless+outliers').searchParams.get('search_query') || 'faceless outliers');
+  </script>
+</body>
+</html>
