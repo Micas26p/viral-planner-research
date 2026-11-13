@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="modern-tokens.css?v=4.3">
   <link rel="stylesheet" href="modern-workspace.css?v=4.3">
   <link rel="stylesheet" href="modern-motion.css?v=4.3">
+  <link rel="stylesheet" href="viral-v2.css?v=2.0">
 <body>
   <header class="mobile-appbar">
     <button class="mobile-menu-button" id="mobileMenuBtn" type="button" aria-label="Abrir navegação" aria-controls="appSidebar">
@@ -58,6 +59,96 @@
         </button>
       </nav>
 
+      <div class="dotti-sidebar-groups" aria-label="DottiFinder Groups">
+        <div>
+          <div class="dotti-nav-section-title">📢 NOVIDADES &amp; RANKING</div>
+          <button type="button" class="dotti-nav-item" data-page="research" data-dotti-action="news">
+            <span class="nav-icon">📢</span>
+            <span>Novidades</span>
+            <span class="nav-badge hot">v2.0</span>
+          </button>
+          <button type="button" class="dotti-nav-item" data-page="browser" data-dotti-action="top10">
+            <span class="nav-icon">🥇</span>
+            <span>Ranking TOP 10</span>
+            <span class="nav-badge">🔥 Outliers</span>
+          </button>
+        </div>
+
+        <div>
+          <div class="dotti-nav-section-title">📂 MINHA BASE</div>
+          <button type="button" class="dotti-nav-item" data-page="opportunities" data-dotti-action="mybase">
+            <span class="nav-icon">👁️</span>
+            <span>Meu Canal</span>
+            <span class="nav-badge pro">Base</span>
+          </button>
+          <button type="button" class="dotti-nav-item" data-page="opportunities" data-dotti-action="saved">
+            <span class="nav-icon">⭐</span>
+            <span>Canais Salvos</span>
+            <span class="nav-badge" id="dottiSavedBadge">0</span>
+          </button>
+          <button type="button" class="dotti-nav-item" data-page="browser" data-dotti-action="similar">
+            <span class="nav-icon">🔀</span>
+            <span>Parecidos com os Meus</span>
+          </button>
+          <button type="button" class="dotti-nav-item" data-page="browser" data-dotti-action="trending">
+            <span class="nav-icon">📈</span>
+            <span>Vídeos em Alta</span>
+            <span class="nav-badge hot">VPH</span>
+          </button>
+        </div>
+
+        <div>
+          <div class="dotti-nav-section-title">🔍 NICHE FINDER</div>
+          <button type="button" class="dotti-nav-item" data-page="browser">
+            <span class="nav-icon">🌐</span>
+            <span>Todos os Canais (/browser)</span>
+            <span class="nav-badge viral">Finder</span>
+          </button>
+          <button type="button" class="dotti-nav-item" data-page="browser" data-dotti-action="babies">
+            <span class="nav-icon">🍼</span>
+            <span>Novos Hoje (&lt; 60 dias)</span>
+          </button>
+          <button type="button" class="dotti-nav-item" data-page="browser" data-dotti-action="breakout">
+            <span class="nav-icon">🔥</span>
+            <span>Estouraram (2x ou mais)</span>
+          </button>
+          <button type="button" class="dotti-nav-item" data-page="research" data-dotti-action="niches">
+            <span class="nav-icon">👥</span>
+            <span>Grupos de Canais</span>
+          </button>
+          <button type="button" class="dotti-nav-item" data-page="research" data-dotti-action="titles">
+            <span class="nav-icon">🎯</span>
+            <span>Títulos que Funcionam</span>
+          </button>
+        </div>
+
+        <div>
+          <div class="dotti-nav-section-title">⚡ VIRAL POWER TOOLS</div>
+          <button type="button" class="dotti-nav-item" data-page="boost">
+            <span class="nav-icon">⚡</span>
+            <span>/boost (Viral Velocity)</span>
+            <span class="nav-badge hot">Turbo</span>
+          </button>
+          <button type="button" class="dotti-nav-item" data-page="grillme">
+            <span class="nav-icon">🥩</span>
+            <span>/grill-me (AI Roast &amp; Fix)</span>
+            <span class="nav-badge pro">IA</span>
+          </button>
+          <button type="button" class="dotti-nav-item" data-page="opportunities" data-dotti-action="blueprints">
+            <span class="nav-icon">📑</span>
+            <span>Fábrica de Blueprints</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="dotti-user-profile">
+        <div class="dotti-user-avatar">M</div>
+        <div class="dotti-user-info">
+          <span class="dotti-user-name">Micael Paciência</span>
+          <span class="dotti-user-tier">PRO • Acesso VIP</span>
+        </div>
+      </div>
+
       <div class="sidebar-utility" aria-label="Research shortcuts">
         <button type="button" data-sidebar-flyout="presets" title="Presets">
           <svg aria-hidden="true"><use href="lucide-sprite.svg#sliders"></use></svg><span data-i18n="nav.presets">Presets</span>
@@ -91,7 +182,77 @@
         <div class="key-pill" id="keyStatus">Connecting</div>
       </div>
 
+      <!-- DottiFinder Gamification & Level Topbar -->
+      <div class="dotti-topbar-addon" id="dottiTopbarAddon">
+        <div class="dotti-welcome-box">
+          <div class="dotti-welcome-title">
+            <span>Olá, Micael!</span>
+            <span style="font-size:10px; padding:2px 6px; border-radius:4px; background:rgba(239,68,68,0.25); color:#ff6b6b; font-weight:800;">PRO 2.0</span>
+          </div>
+          <div class="dotti-welcome-sub">Os produtos do Viral Research &amp; DottiFinder. Inteligência algorítmica ao vivo.</div>
+        </div>
+
+        <div class="garimpo-level-widget" id="garimpoLevelWidget" title="Seu nível no Garimpo de Outliers. Ganhe XP minerando e salvando canais!">
+          <div class="garimpo-level-badge">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span id="garimpoLevelText">NV 11 Capitão do garimpo</span>
+          </div>
+          <div class="garimpo-xp-bar-wrap">
+            <div class="garimpo-xp-labels">
+              <span>XP</span>
+              <span id="garimpoXpText">88 / 100</span>
+            </div>
+            <div class="garimpo-xp-track">
+              <div class="garimpo-xp-fill" id="garimpoXpFill" style="width: 88%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="garimpo-stat-pill">
+          <small>SEUS CANAIS ACHARAM</small>
+          <b id="garimpoChannelsFoundText">+1.135 canais</b>
+        </div>
+
+        <div class="garimpo-leaderboard">
+          <span>QUEM TROUXE MAIS (7D):</span>
+          <div class="garimpo-leader-tags">
+            <span class="leader-tag">Diego 18</span>
+            <span class="leader-tag">Mateus 6</span>
+            <span class="leader-tag">Marina 4</span>
+          </div>
+        </div>
+
+        <div class="dotti-header-actions">
+          <button type="button" class="dotti-btn-train" id="dottiTrainBtn" title="Treinar e aquecer perfis de navegação">
+            <span>⚡ TREINAR</span>
+          </button>
+          <button type="button" class="dotti-btn-package" id="dottiOpenPackHeaderBtn" title="Abrir pacote de canais descobertos">
+            <span>🎁 Abrir Pacote</span>
+          </button>
+          <button type="button" class="dotti-sound-toggle" id="dottiSoundToggleBtn" title="Ligar / Desligar efeitos sonoros">
+            <span id="dottiSoundLabel">🔊 Som: ON</span>
+          </button>
+        </div>
+      </div>
+
       <section class="workspace page-view on" id="researchWorkspace" data-page-view="research">
+        <!-- Discovery Package Banner ("Caixa Mágica") in Feed -->
+        <div class="discovery-package-banner" id="discoveryPackageBanner">
+          <div class="package-art">
+            <div class="package-pack-card">
+              <span class="pack-badge">CANAIS</span>
+              <div class="pack-sparkle">✨</div>
+            </div>
+          </div>
+          <div class="package-info">
+            <h3>Os canais da sua base encontraram <span id="packageChannelCount">161</span> canais</h3>
+            <p>Canais e outliers que a busca e seus concorrentes trouxeram a partir da inteligência da sua base.</p>
+          </div>
+          <button type="button" class="package-open-btn" id="openMagicBoxBtn">
+            <span>🎁 Abrir o Pacote</span>
+          </button>
+        </div>
+
         <form class="research-panel command-center" id="researchForm" novalidate>
           <div class="panel-head command-intro">
             <div>
@@ -924,6 +1085,249 @@
           </div>
         </div>
       </section>
+
+      <!-- VIRAL POWER TOOL 1: /browser (DottiFinder Niche & Channel Explorer) -->
+      <section class="workspace page-view" id="browserWorkspace" data-page-view="browser" hidden>
+        <div class="browser-view-shell">
+          <header class="opportunities-hero">
+            <div>
+              <div class="kicker">DottiFinder Niche Explorer</div>
+              <h1>Explorador de Canais &amp; Nichos (/browser)</h1>
+              <p>Varra toda a base de inteligência com cards visuais cinemáticos, métricas consolidadas e vídeos em destaque lado a lado.</p>
+            </div>
+            <span class="opportunities-count" id="browserTotalChannelsCount">0 canais</span>
+          </header>
+
+          <div class="browser-filters-hero">
+            <div class="browser-search-row">
+              <svg width="18" height="18" style="color:var(--muted);"><use href="lucide-sprite.svg#search"></use></svg>
+              <input type="text" class="browser-search-input" id="browserSearchInput" placeholder="Pesquisar por nome de canal, tema, handle (@canal) ou palavra-chave...">
+              <button type="button" class="nex-btn nex-btn-random" id="browserRandomBtn" title="Surpreenda-me com um canal outlier">
+                <svg width="14" height="14"><use href="lucide-sprite.svg#shuffle"></use></svg>
+                <span>Aleatório</span>
+              </button>
+            </div>
+
+            <div class="browser-tab-pills" id="browserTabPills">
+              <button type="button" class="browser-pill-btn on" data-browser-filter="all">Todos os Canais</button>
+              <button type="button" class="browser-pill-btn" data-browser-filter="top_views">🔥 Mais Vistos</button>
+              <button type="button" class="browser-pill-btn" data-browser-filter="high_vph">⚡ Médio e Agora (50+ views/h)</button>
+              <button type="button" class="browser-pill-btn" data-browser-filter="outliers_2x">🚀 Estouraram (2x ou mais)</button>
+              <button type="button" class="browser-pill-btn" data-browser-filter="babies">🍼 Novos Hoje (&lt; 60d)</button>
+              <button type="button" class="browser-pill-btn" data-browser-filter="formula63k">🏆 Fórmula $63k</button>
+              <button type="button" class="browser-pill-btn" data-browser-filter="arbitrage">💎 Minas de Ouro BR</button>
+            </div>
+
+            <div class="niche-category-strip" id="browserNicheStrip">
+              <button type="button" class="niche-tag on" data-browser-niche="all">Todos os Nichos</button>
+              <button type="button" class="niche-tag" data-browser-niche="history">História &amp; Mistérios</button>
+              <button type="button" class="niche-tag" data-browser-niche="science">Ciência &amp; Pré-História</button>
+              <button type="button" class="niche-tag" data-browser-niche="cars">Carros &amp; Veículos</button>
+              <button type="button" class="niche-tag" data-browser-niche="tech">Tecnologia &amp; Consumo</button>
+              <button type="button" class="niche-tag" data-browser-niche="finance">Finanças &amp; Impérios</button>
+              <button type="button" class="niche-tag" data-browser-niche="crime">Psicologia &amp; Crime</button>
+              <button type="button" class="niche-tag" data-browser-niche="military">Militar &amp; Armas</button>
+              <button type="button" class="niche-tag" data-browser-niche="ocean">Oceano &amp; Anomalias</button>
+            </div>
+          </div>
+
+          <div id="browserChannelGrid" class="channel-grid" style="display:flex; flex-direction:column; gap:16px;">
+            <!-- Rendered dynamically with horizontal strips -->
+          </div>
+        </div>
+      </section>
+
+      <!-- VIRAL POWER TOOL 2: /boost (Viral Velocity & Outlier Booster) -->
+      <section class="workspace page-view" id="boostWorkspace" data-page-view="boost" hidden>
+        <div class="boost-shell">
+          <div class="boost-hero">
+            <div class="boost-hero-title">
+              <span>⚡</span>
+              <span>Viral Velocity &amp; Outlier Booster (/boost)</span>
+              <span class="dotti-tag-status" style="background:#10b981; color:#06110f; font-size:10px; margin-left:6px;">ALGORITMO 2.0</span>
+            </div>
+            <p style="margin:0; font-size:13px; color:#cbd5e1; max-width:850px; line-height:1.5;">
+              Simule a velocidade viral em tempo real (VPH - Views Per Hour), meça o multiplicador sobre a base de inscritos (OER) e desbloqueie as diretrizes algorítmicas de retenção para transformar qualquer ideia em um outlier explosivo.
+            </p>
+
+            <div class="boost-kpi-row">
+              <div class="boost-kpi-card">
+                <small>Top Outlier Monitorado</small>
+                <strong id="boostKpiOutlier">168.0x</strong>
+              </div>
+              <div class="boost-kpi-card">
+                <small>Velocidade Máxima (VPH)</small>
+                <strong id="boostKpiVph">1.840 vph</strong>
+              </div>
+              <div class="boost-kpi-card">
+                <small>Retenção Média Alvo</small>
+                <strong id="boostKpiRetention">58.4% aos 60s</strong>
+              </div>
+              <div class="boost-kpi-card">
+                <small>Janela Recomendada</small>
+                <strong id="boostKpiWindow">15h - 18h BRT</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="boost-calc-panel">
+            <div class="boost-input-card">
+              <h3 style="margin:0; font-size:15px; color:#fff; display:flex; align-items:center; gap:8px;">
+                <span>🎯</span>
+                <span>Calculadora de Impulso Viral</span>
+              </h3>
+
+              <label class="field">
+                <span>Título do Vídeo</span>
+                <input type="text" id="boostTitleInput" placeholder="Ex: O Erro de $100M Que Faliram Esta Fábrica" value="O Erro de $100M Que Faliram Esta Fábrica">
+              </label>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <label class="field">
+                  <span>Visualizações Atuais (Views)</span>
+                  <input type="number" id="boostViewsInput" value="380000" min="0" step="5000">
+                </label>
+                <label class="field">
+                  <span>Inscritos do Canal</span>
+                  <input type="number" id="boostSubsInput" value="18500" min="10" step="500">
+                </label>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <label class="field">
+                  <span>Horas Desde a Publicação</span>
+                  <input type="number" id="boostAgeHoursInput" value="72" min="1" step="1">
+                </label>
+                <label class="field">
+                  <span>Duração do Vídeo (Minutos)</span>
+                  <input type="number" id="boostDurationInput" value="14" min="1" step="1">
+                </label>
+              </div>
+
+              <div style="margin-top:6px;">
+                <button type="button" class="dotti-act-btn primary" id="runBoostCalculationBtn" style="width:100%; justify-content:center; padding:10px; font-size:13px; font-weight:700;">
+                  <span>⚡ Calcular Aceleração Viral</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="boost-result-card" id="boostResultCard">
+              <h3 style="margin:0; font-size:15px; color:#fff; display:flex; align-items:center; gap:8px;">
+                <span>📊</span>
+                <span>Diagnóstico do Algoritmo</span>
+              </h3>
+
+              <div class="boost-meter-gauge">
+                <span style="font-size:11px; text-transform:uppercase; color:#94a3b8; font-weight:700;">Índice de Potencial Viral (Boost Score)</span>
+                <span class="boost-meter-score" id="boostScoreDisplay">89</span>
+                <span class="dotti-tag-status" id="boostTierBadge" style="background:#10d9a4; color:#06110f; font-size:12px; font-weight:800; padding:4px 12px;">🚀 HYPER OUTLIER (20.5x)</span>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12px;">
+                <div style="background:rgba(255,255,255,0.04); padding:8px 12px; border-radius:6px;">
+                  <span style="color:#94a3b8; display:block; font-size:10px;">VELOCIDADE (VPH)</span>
+                  <b id="boostVphDisplay" style="color:#38bdf8; font-size:14px;">5.277 views/hora</b>
+                </div>
+                <div style="background:rgba(255,255,255,0.04); padding:8px 12px; border-radius:6px;">
+                  <span style="color:#94a3b8; display:block; font-size:10px;">MULTIPLICADOR (OER)</span>
+                  <b id="boostMultiplierDisplay" style="color:#f59e0b; font-size:14px;">20.5x a base</b>
+                </div>
+              </div>
+
+              <div style="background:rgba(16,217,164,0.08); border-left:3px solid #10d9a4; padding:10px 12px; border-radius:6px; font-size:12px; color:#e2e8f0; line-height:1.4;">
+                <b style="color:#10d9a4; display:block; margin-bottom:2px;">Diretriz de Retenção:</b>
+                <span id="boostAdviceText">Este vídeo apresenta tração anormal. Recomenda-se expandir o tema para 12-16 minutos, mantendo a regra dos micro-loops de revelação a cada 90 segundos.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIRAL POWER TOOL 3: /grill-me (AI Roast & Packaging Griller) -->
+      <section class="workspace page-view" id="grillmeWorkspace" data-page-view="grillme" hidden>
+        <div class="grill-shell">
+          <div class="grill-hero">
+            <div class="grill-hero-title">
+              <span>🥩</span>
+              <span>/grill-me — Viral Idea &amp; Packaging Griller (AI Roast)</span>
+            </div>
+            <p style="margin:0; font-size:13px; color:#cbd5e1; max-width:850px; line-height:1.5;">
+              Coloque seu título, ideia ou miniatura na grelha. Receba uma crítica impiedosa das 3 falhas que fariam o vídeo flopar e 3 reescritas 10x mais virais prontas para gravação.
+            </p>
+
+            <div class="grill-persona-bar">
+              <span style="font-size:11px; text-transform:uppercase; color:#94a3b8; font-weight:700; align-self:center;">Persona do Roast:</span>
+              <button type="button" class="grill-persona-chip on" data-persona="giovanni">😈 Giovanni Brutal (Impiedoso)</button>
+              <button type="button" class="grill-persona-chip" data-persona="algo">🤖 Algoritmo Frio do YouTube</button>
+              <button type="button" class="grill-persona-chip" data-persona="claude63k">🏆 Estrategista $63k / Nexlev</button>
+            </div>
+          </div>
+
+          <div class="grill-card">
+            <label class="field">
+              <span style="font-weight:700; color:#fff;">Título ou Ideia do Próximo Vídeo</span>
+              <input type="text" id="grillTitleInput" placeholder="Ex: Curiosidades sobre a Segunda Guerra Mundial que você não sabia" value="Curiosidades sobre a Segunda Guerra Mundial que você não sabia">
+            </label>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <label class="field">
+                <span>Nicho ou Tema Principal</span>
+                <input type="text" id="grillNicheInput" placeholder="Ex: História Militar / Documentário" value="História Militar &amp; Guerra">
+              </label>
+              <label class="field">
+                <span>Ideia da Thumbnail (Opcional)</span>
+                <input type="text" id="grillThumbInput" placeholder="Ex: Foto de tanque alemão com texto 'O SEGREDO'" value="Foto de tanque alemão no escuro com soldado">
+              </label>
+            </div>
+
+            <button type="button" class="grill-action-btn" id="runGrillMeBtn">
+              <span>🔥 GRILL ME AGORA!</span>
+            </button>
+          </div>
+
+          <div class="grill-report-grid" id="grillReportGrid" hidden>
+            <div class="grill-card">
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <h3 style="margin:0; font-size:15px; color:#fff; display:flex; align-items:center; gap:8px;">
+                  <span>🎯</span>
+                  <span>Veredito &amp; Nota Viral</span>
+                </h3>
+                <span class="dotti-tag-status" id="grillScoreBadge" style="background:#ef4444; color:#fff; font-size:12px; font-weight:800; padding:4px 10px;">NOTA: 38/100 (FLOP)</span>
+              </div>
+
+              <div id="grillVerdictBox" style="background:rgba(239,68,68,0.1); border-left:3px solid #ef4444; padding:12px 14px; border-radius:8px; font-size:13px; color:#f1f5f9; line-height:1.5;">
+                Carregando análise...
+              </div>
+
+              <div style="font-size:11px; text-transform:uppercase; color:#94a3b8; font-weight:800; margin-top:6px;">💀 As 3 Falhas Fatais Identificadas</div>
+              <div id="grillFlawsContainer" style="display:flex; flex-direction:column; gap:8px;">
+                <!-- Flaws rendered here -->
+              </div>
+            </div>
+
+            <div class="grill-card">
+              <h3 style="margin:0; font-size:15px; color:#fff; display:flex; align-items:center; gap:8px;">
+                <span>🚀</span>
+                <span>3 Títulos Reescritos (10x Mais Virais)</span>
+              </h3>
+
+              <div id="grillUpgradesContainer" style="display:flex; flex-direction:column; gap:10px;">
+                <!-- Upgrades rendered here -->
+              </div>
+
+              <div style="margin-top:10px; background:rgba(255,255,255,0.04); border-radius:8px; padding:12px;">
+                <b style="font-size:11px; text-transform:uppercase; color:#38bdf8; display:block; margin-bottom:4px;">🎣 Gancho Direct-to-Action (0-30s):</b>
+                <p id="grillHookScript" style="margin:0; font-size:12px; color:#cbd5e1; line-height:1.45; font-style:italic;">...</p>
+              </div>
+
+              <button type="button" class="dotti-act-btn" id="copyGrillPackageBtn" style="justify-content:center; padding:10px; margin-top:8px;">
+                <svg width="14" height="14"><use href="lucide-sprite.svg#copy"></use></svg>
+                <span>Copiar Pacote Completo (Títulos + Gancho)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
   <div class="channel-detail-layer" id="channelDetailLayer" hidden>
@@ -1180,6 +1584,39 @@
       </footer>
     </div>
   </dialog>
+
+  <!-- Mystery Box Modal ("Caixa Mágica" Modal com Luzes, Confetti e Som) -->
+  <div class="magic-box-modal-backdrop" id="magicBoxModalBackdrop" hidden>
+    <div class="magic-box-stage" id="magicBoxStage">
+      <div class="sunburst-rays" id="sunburstRays"></div>
+      <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+      <button class="modal-close-round" id="closeMagicBoxBtn" type="button" aria-label="Fechar">
+        <svg width="16" height="16"><use href="lucide-sprite.svg#close"></use></svg>
+      </button>
+
+      <div class="magic-box-content">
+        <div class="magic-unboxing-pack" id="magicUnboxingPack" title="Clique para abrir!">
+          <div class="pack-3d-glow"></div>
+          <div class="pack-3d-body">
+            <span class="pack-label-3d">VIRAL PACK</span>
+            <div class="pack-icon-glow">⚡</div>
+          </div>
+          <span class="pack-prompt-label">🎁 Clique para abrir o pacote!</span>
+        </div>
+
+        <div class="magic-reveal-banner" id="magicRevealBanner">
+          <div class="magic-count-badge" id="magicCountBadge">161 CANAIS</div>
+          <button type="button" class="magic-see-channels-btn" id="magicSeeChannelsBtn">
+            <span>Ver canais</span>
+          </button>
+        </div>
+
+        <div class="magic-teaser-strip" id="magicTeaserStrip">
+          <!-- Dynamic cards populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="settings.js?v=4.6" defer></script>
   <script src="app.js?v=4.6" defer></script>

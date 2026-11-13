@@ -5151,6 +5151,550 @@ app.get('/api/export/:format', (req, res) => {
   return res.status(404).json({ error: 'format not supported' });
 });
 
+// ==========================================
+// VIRAL RESEARCH 2.0 API ENDPOINTS (DottiFinder Engine)
+// ==========================================
+
+function getSeedPackageChannels() {
+  return [
+    {
+      channelId: 'ch-fossil',
+      title: 'Fossil',
+      handle: '@fossilprehistoric',
+      subscribers: 21400,
+      videoCount: 11,
+      ageDays: 178,
+      avgViews: 732000,
+      niche: 'Ciência & Animais Pré-Históricos',
+      badge: 'RARO',
+      badgeColor: '#38bdf8',
+      topVideos: [
+        {
+          videoId: 'fos-1',
+          title: 'How Long You Would Last in Every Prehistoric Era',
+          viewCount: 7800000,
+          duration: '19:11',
+          multiplier: '>1.000x',
+          thumbnail: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=640&q=80',
+          publishedDaysAgo: 30
+        },
+        {
+          videoId: 'fos-2',
+          title: 'Which Human Species Could You Beat in a Fight?',
+          viewCount: 687000,
+          duration: '13:57',
+          multiplier: '32x',
+          thumbnail: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=640&q=80',
+          publishedDaysAgo: 14
+        },
+        {
+          videoId: 'fos-3',
+          title: 'Could You Survive Every Prehistoric Apex Predator?',
+          viewCount: 1800000,
+          duration: '16:45',
+          multiplier: '84x',
+          thumbnail: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=640&q=80',
+          publishedDaysAgo: 23
+        }
+      ]
+    },
+    {
+      channelId: 'ch-carzmood',
+      title: 'CARZMOOD',
+      handle: '@carzmood',
+      subscribers: 15200,
+      videoCount: 119,
+      ageDays: 346,
+      avgViews: 29000,
+      niche: 'Carros & Engenharia Automotiva',
+      badge: '⚡ Alto Potencial',
+      badgeColor: '#10d9a4',
+      topVideos: [
+        {
+          videoId: 'car-1',
+          title: 'THEY NEVER BREAK! 5 Cars That Run for 500,000 Miles',
+          viewCount: 890000,
+          duration: '11:24',
+          multiplier: '58x',
+          thumbnail: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=640&q=80',
+          publishedDaysAgo: 18
+        },
+        {
+          videoId: 'car-2',
+          title: 'OUTLASTS A NEW CAMRY! The Engine That Mechanics Secretly Buy',
+          viewCount: 420000,
+          duration: '13:10',
+          multiplier: '27x',
+          thumbnail: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=640&q=80',
+          publishedDaysAgo: 25
+        },
+        {
+          videoId: 'car-3',
+          title: 'ZERO FLAWS! Why This Japanese Engine Was Banned in the US',
+          viewCount: 650000,
+          duration: '15:02',
+          multiplier: '42x',
+          thumbnail: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=640&q=80',
+          publishedDaysAgo: 9
+        }
+      ]
+    },
+    {
+      channelId: 'ch-leia-rotulo',
+      title: 'Leia o Rótulo',
+      handle: '@leiaorotulo',
+      subscribers: 11300,
+      videoCount: 32,
+      ageDays: 94,
+      avgViews: 127000,
+      niche: 'Tecnologia & Investigação de Consumo',
+      badge: '🔥 Em Alta',
+      badgeColor: '#f59e0b',
+      topVideos: [
+        {
+          videoId: 'rot-1',
+          title: '6 marcas de espaguete tóxicas para evitar e 3 que são massa de verdade',
+          viewCount: 1500000,
+          duration: '21:11',
+          multiplier: '132x',
+          thumbnail: 'https://images.unsplash.com/photo-1551462147-37885acc36f1?w=640&q=80',
+          publishedDaysAgo: 26
+        },
+        {
+          videoId: 'rot-2',
+          title: 'Nunca Compre Essas 11 Marcas de Manteiga (E 5 Que São REALMENTE Manteiga)',
+          viewCount: 845000,
+          duration: '25:03',
+          multiplier: '74x',
+          thumbnail: 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=640&q=80',
+          publishedDaysAgo: 31
+        },
+        {
+          videoId: 'rot-3',
+          title: '13 Marcas de Sardinha Enlatada Para JAMAIS Comprar e 4 Que São Puras',
+          viewCount: 450000,
+          duration: '19:40',
+          multiplier: '39x',
+          thumbnail: 'https://images.unsplash.com/photo-1534482421-64566f976cfa?w=640&q=80',
+          publishedDaysAgo: 19
+        }
+      ]
+    },
+    {
+      channelId: 'ch-mente-sombria',
+      title: 'Mente Oculta',
+      handle: '@menteoculta',
+      subscribers: 42100,
+      videoCount: 14,
+      ageDays: 62,
+      avgViews: 890000,
+      niche: 'Psicologia Sombria & True Crime',
+      badge: '🍼 Bebê',
+      badgeColor: '#a855f7',
+      topVideos: [
+        {
+          videoId: 'men-1',
+          title: 'O Teste Psicológico Que a CIA Proibiu Em 1974',
+          viewCount: 2400000,
+          duration: '18:30',
+          multiplier: '57x',
+          thumbnail: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=640&q=80',
+          publishedDaysAgo: 11
+        },
+        {
+          videoId: 'men-2',
+          title: 'Por Que Pessoas Inteligentes Se Destroem Sozinhas',
+          viewCount: 1100000,
+          duration: '14:15',
+          multiplier: '26x',
+          thumbnail: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=640&q=80',
+          publishedDaysAgo: 22
+        }
+      ]
+    },
+    {
+      channelId: 'ch-abismo',
+      title: 'Abismo Profundo',
+      handle: '@abismoprofundo',
+      subscribers: 18400,
+      videoCount: 9,
+      ageDays: 51,
+      avgViews: 610000,
+      niche: 'Oceano & Mistérios Inexplicáveis',
+      badge: '💎 Arbitragem',
+      badgeColor: '#06d6a0',
+      topVideos: [
+        {
+          videoId: 'abi-1',
+          title: 'A Criatura Desconhecida Que Os Radares Pegaram na Fossa das Marianas',
+          viewCount: 3100000,
+          duration: '16:04',
+          multiplier: '168x',
+          thumbnail: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=640&q=80',
+          publishedDaysAgo: 15
+        }
+      ]
+    }
+  ];
+}
+
+function extractYouTubeVideoId(input) {
+  if (!input || typeof input !== 'string') return null;
+  const match = input.match(/(?:youtube\.com\/(?:watch\?.*v=|embed\/|v\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/i);
+  if (match) return match[1];
+  const trimmed = input.trim();
+  if (/^[a-zA-Z0-9_-]{3,24}$/.test(trimmed) && !trimmed.includes(' ')) return trimmed;
+  return null;
+}
+
+// In-memory gamification state (persisted across requests)
+const gamificationStore = {
+  level: 11,
+  title: 'Capitão do Garimpo',
+  xp: 88,
+  xpMax: 100,
+  channelsFound: 1135,
+  streakDays: 7,
+  leaderboard: [
+    { name: 'Diego', channels: 18 },
+    { name: 'Mateus', channels: 6 },
+    { name: 'Marina', channels: 4 }
+  ]
+};
+
+app.get('/api/gamification/profile', (_req, res) => {
+  const oppCount = researchStore.listOpportunityChannels(2000).length;
+  const totalChannels = Math.max(gamificationStore.channelsFound, oppCount + 1100);
+  res.json({
+    ...gamificationStore,
+    channelsFound: totalChannels
+  });
+});
+
+app.post('/api/gamification/action', (req, res) => {
+  const { action, xpBonus } = req.body || {};
+  const add = Math.min(100, Math.max(1, Number(xpBonus) || 5));
+  gamificationStore.xp += add;
+  gamificationStore.channelsFound += Math.floor(Math.random() * 3) + 1;
+  let leveledUp = false;
+  while (gamificationStore.xp >= gamificationStore.xpMax) {
+    gamificationStore.level += 1;
+    gamificationStore.xp = gamificationStore.xp - gamificationStore.xpMax;
+    gamificationStore.xpMax = Math.round(gamificationStore.xpMax * 1.25);
+    leveledUp = true;
+    if (gamificationStore.level >= 20) gamificationStore.title = 'Magnata Faceless';
+    else if (gamificationStore.level >= 15) gamificationStore.title = 'Mestre dos Algoritmos';
+    else if (gamificationStore.level >= 11) gamificationStore.title = 'Capitão do Garimpo';
+  }
+  res.json({
+    ok: true,
+    action,
+    level: gamificationStore.level,
+    xp: gamificationStore.xp,
+    xpMax: gamificationStore.xpMax,
+    title: gamificationStore.title,
+    channelsFound: gamificationStore.channelsFound,
+    leveledUp
+  });
+});
+
+app.post('/api/viral/boost/analyze', (req, res) => {
+  try {
+    let { videoId, title = '', views = 0, subscribers = 0, publishedAt, durationSeconds = 0 } = req.body || {};
+    let resolvedVideo = null;
+    let resolvedChannel = null;
+
+    const urlVideoId = extractYouTubeVideoId(title) || extractYouTubeVideoId(videoId);
+    if (urlVideoId) {
+      videoId = urlVideoId;
+    }
+
+    if (videoId) {
+      const oppChannels = researchStore.listOpportunityChannels(500);
+      const match = oppChannels.find(c => c.topVideo?.videoId === videoId);
+      if (match) {
+        resolvedChannel = match;
+        resolvedVideo = match.topVideo;
+      } else {
+        const seed = getSeedPackageChannels().find(c => (c.topVideos || []).some(v => v.videoId === videoId));
+        if (seed) {
+          resolvedChannel = seed;
+          resolvedVideo = seed.topVideos.find(v => v.videoId === videoId);
+        }
+      }
+    }
+
+    const vCount = Math.max(0, Number(resolvedVideo?.viewCount ?? views) || 10000);
+    const subCount = Math.max(1, Number(resolvedChannel?.subscriberCount ?? subscribers) || 1000);
+    const durSec = Math.max(10, Number(resolvedVideo?.durationSeconds ?? durationSeconds) || 720);
+    const pubDate = resolvedVideo?.publishedAt || publishedAt || new Date(Date.now() - 14 * 86400000).toISOString();
+
+    const ageHours = Math.max(0.1, (Date.now() - new Date(pubDate).getTime()) / 3600000);
+    const vph = Math.round(vCount / ageHours);
+    const multiplier = Number((vCount / Math.max(100, subCount)).toFixed(1));
+
+    let viralityRating = 'BASELINE';
+    let ratingLabel = 'Desempenho Regular';
+    let viralityColor = '#94a3b8';
+    if (multiplier >= 20) {
+      viralityRating = 'HYPER_OUTLIER';
+      ratingLabel = '🚀 Hyper Outlier (20x+)';
+      viralityColor = '#10d9a4';
+    } else if (multiplier >= 8) {
+      viralityRating = 'SUPER_OUTLIER';
+      ratingLabel = '🔥 Super Outlier (8x - 20x)';
+      viralityColor = '#f59e0b';
+    } else if (multiplier >= 3) {
+      viralityRating = 'BREAKOUT';
+      ratingLabel = '⚡ Breakout Velocity (3x - 8x)';
+      viralityColor = '#38bdf8';
+    } else if (multiplier >= 1.5) {
+      viralityRating = 'ABOVE_AVERAGE';
+      ratingLabel = '📈 Acima da Média (1.5x - 3x)';
+      viralityColor = '#a78bfa';
+    }
+
+    let velocityRank = 'STEADY';
+    if (vph >= 1000) velocityRank = 'TSUNAMI (1.000+ vph)';
+    else if (vph >= 300) velocityRank = 'EXPONENCIAL (300+ vph)';
+    else if (vph >= 80) velocityRank = 'ALTA VELOCIDADE (80+ vph)';
+    else velocityRank = 'ESTÁVEL';
+
+    let boostScore = Math.min(100, Math.max(20, Math.round(
+      (Math.min(multiplier, 25) / 25) * 45 +
+      (Math.min(vph, 1200) / 1200) * 35 +
+      (durSec >= 600 ? 15 : 5) +
+      5
+    )));
+
+    const analysis = {
+      videoId: videoId || 'simulated',
+      title: title || resolvedVideo?.title || 'Análise de Impulso Viral',
+      metrics: {
+        views: vCount,
+        subscribers: subCount,
+        ageHours: Math.round(ageHours),
+        vph,
+        multiplier,
+        durationFormatted: `${Math.floor(durSec / 60)}:${String(durSec % 60).padStart(2, '0')}`
+      },
+      boostScore,
+      viralityRating,
+      ratingLabel,
+      viralityColor,
+      velocityRank,
+      algorithmHacks: {
+        optimalDuration: '12m a 16m (Zona Máxima de Retenção & Mid-roll Monetizado)',
+        retentionBlueprint: [
+          { phase: '00:00 - 00:30', name: 'Gancho Direct-to-Action', rule: 'Sem vinheta, sem "oi pessoal". Mostre o clímax ou a consequência catastrófica.' },
+          { phase: '00:30 - 03:00', name: 'Apresentação do Enigma', rule: 'Por que o que todos achavam ser verdade está completamente errado.' },
+          { phase: '03:00 - 08:00', name: 'Micro-loops de Tensão (90s)', rule: 'A cada 90 segundos uma revelação parcial que puxa outra pergunta.' },
+          { phase: '08:00+', name: 'Clímax & Lição Surpreendente', rule: 'A resolução inesperada que faz o espectador comentar e maratonar o próximo vídeo.' }
+        ],
+        bestPublishWindows: [
+          { region: 'EUA / Global (EN)', window: '14h00 - 17h00 UTC (10h - 13h EST)' },
+          { region: 'Brasil (PT-BR)', window: '15h00 - 18h30 BRT' },
+          { region: 'Alemanha / Europa (DE/EU)', window: '16h00 - 19h00 CET' }
+        ],
+        curiosityAudit: multiplier >= 5
+          ? 'Embalagem de alta saliência perceptual: título e thumb criam um gap cognitivo impossível de ignorar.'
+          : 'Recomendação de Upgrade: adicione um contraste numérico ou adjetivo polarizador para elevar o CTR acima de 10%.'
+      }
+    };
+
+    res.json(analysis);
+  } catch (err) {
+    res.status(500).json({ error: safeErrorMessage(err) });
+  }
+});
+
+app.post('/api/viral/grill-me', (req, res) => {
+  try {
+    const { title = '', topic = '', niche = '', thumbnailIdea = '', persona = 'giovanni' } = req.body || {};
+    const rawTitle = typeof title === 'string' ? title : (typeof topic === 'string' ? topic : '');
+    const cleanTitle = (rawTitle || 'Meu Próximo Vídeo').trim();
+    const len = cleanTitle.length;
+    const lower = cleanTitle.toLowerCase();
+
+    const hasNumbers = /\d+/.test(cleanTitle);
+    const hasTension = /(segredo|nunca|por que|porque|verdade|erro|pior|proibido|como|mistério|misterio|colapso|ninguém|ninguem|alerta|destru|mentira|fraude|bilionário|bilionario|guerra|oculto)/i.test(lower);
+    const hasCuriosity = /(como|por que|o que aconteceu|descobri|quando|qual|o dia)/i.test(lower);
+
+    let score = 42;
+    if (len >= 38 && len <= 72) score += 18;
+    else if (len < 25) score -= 12;
+    if (hasNumbers) score += 14;
+    if (hasTension) score += 16;
+    if (hasCuriosity) score += 10;
+    score = Math.min(94, Math.max(22, score));
+
+    const displayTitle = cleanTitle.length > 70 ? cleanTitle.slice(0, 67) + '...' : cleanTitle;
+
+    let personaVerdict = '';
+    let toneAdvice = '';
+    if (persona === 'giovanni') {
+      if (score < 50) {
+        personaVerdict = `Irmão, vou ser 100% brutal contigo: se você postar com o título "${displayTitle}", isso vai morrer com 300 views. O espectador passa por 40 vídeos por minuto no feed. Não tem tensão, não tem dor, não tem mistério.`;
+      } else if (score < 75) {
+        personaVerdict = `Tá no caminho, mas ainda tá "morno". Título bom não é título bonitinho de redação escolar; é título que cutuca uma ferida ou deixa uma pergunta ardendo na cabeça da pessoa. Dá pra transformar num 10x fácil.`;
+      } else {
+        personaVerdict = `Aí sim! Essa estrutura tem pegada de canal que fatura múltiplos dígitos. Tem curiosidade, tem especificidade. Se a thumbnail acompanhar esse nível de contraste, o CTR vai passar de 9%.`;
+      }
+      toneAdvice = 'Corte todo papo furado dos primeiros 15 segundos. Comece direto no problema.';
+    } else if (persona === 'algo') {
+      personaVerdict = `[DIAGNÓSTICO ALGORÍTMICO] Probabilidade de CTR inicial nos primeiros 1.000 impressões: ${((score / 100) * 11).toFixed(1)}%. Índice de entropia semântica: ${score}/100.`;
+      toneAdvice = 'Otimização de cluster semântico recomendada para retenção acima de 55% aos 60s.';
+    } else {
+      personaVerdict = `Pelo framework do canal de $63k/mês: títulos vencedores não descrevem o que o vídeo É; eles descrevem o que o espectador VAI PERDER se não clicar.`;
+      toneAdvice = 'Use a fórmula de storytelling em 3 atos para sustentar o RPM alto.';
+    }
+
+    const fatalFlaws = [
+      hasNumbers ? 'O número usado precisa de mais dramaticidade comparativa (ex: em vez de "10 carros", use "Os 3 Carros Que Faliram a...").' : 'Ausência fatal de especificidade numérica: afirmações genéricas passam despercebidas no feed.',
+      hasTension ? 'A tensão existe, mas falta indicar o risco ou a consequência irreversível.' : 'Zero tensão dramática: parece uma enciclopédia informativa, não um documentário irresistível.',
+      'Risco crítico de abandono aos 30s: se você gastar tempo dando boas-vindas em vez de mostrar o clímax, 50% dos cliques vão embora.'
+    ];
+
+    let entity = cleanTitle
+      .replace(/^(como\s+funciona|como\s+é|como\s+fazer|como|por\s+que|porque|o\s+que\s+é|o\s+que|qual|quando|o|a|os|as|um|uma)\s+/i, '')
+      .trim();
+    if (entity.length > 45) {
+      entity = entity.slice(0, 42).replace(/[\s,;.-]+$/, '') + '...';
+    }
+    if (!entity) entity = 'Esse Nicho';
+
+    const upgrades = [
+      {
+        angle: '🔥 Curiosidade Extrema & Alerta Oculto',
+        title: `O Que Ninguém Te Conta Sobre ${entity} (E Por Que Agora É Tarde Demais)`,
+        ctrMultiplier: '+240% CTR Estimado',
+        formula: '[Gatilho Oculto] + [Entidade Específica] + [Consequência Iminente]'
+      },
+      {
+        angle: '⚡ O Erro Fatal / Controvérsia',
+        title: `O Erro de $100M Que Destruiu ${entity} — Revelado`,
+        ctrMultiplier: '+185% CTR Estimado',
+        formula: '[Perda Financeira/Fato Específico] + [Queda Dramática] + [Revelação]'
+      },
+      {
+        angle: '🎬 Documentário Investigativo (Padrão $63k)',
+        title: `Como Eles Esconderam ${entity} Por 40 Anos Até Que Um Arquivo Vazou`,
+        ctrMultiplier: '+210% CTR Estimado',
+        formula: '[Conspiração/Segredo Temporal] + [Entidade] + [Ponto de Inflexão]'
+      }
+    ];
+
+    const thumbnailFix = {
+      composition: 'Regra dos 3 Elementos: 1 Objeto Principal em 60% da tela + 1 Elemento de Conflito/Reação + Fundo Cinematográfico Escuro com Vinheta.',
+      colorContrast: 'Paleta Complementar de Alta Acutância: Azul Escuro (#0a1128) vs Amarelo Neon (#ffd000) ou Vermelho Sangue (#e63946).',
+      textOverlay: hasNumbers ? '3 PALAVRAS MAX: "JAMAIS COMPRE!" ou "FOI PROIBIDO?"' : 'TEXTO DE CAPA: "O SEGREDO" ou "NÃO VEJA ISSO"',
+      focalPoint: 'Iluminação Rim Light forte na borda do elemento central para destacar no modo escuro do celular.'
+    };
+
+    const hook30s = `Nos próximos 10 minutos, você vai descobrir por que ${entity} mudou tudo — e o motivo pelo qual quase ninguém fala abertamente sobre o que aconteceu nos bastidores. Enquanto a maioria das pessoas continua acreditando na versão oficial, os documentos provam exatamente o oposto... e o que estava escondido ali dentro vai te deixar em choque.`;
+
+    res.json({
+      cleanTitle,
+      persona,
+      viralScore: score,
+      verdict: personaVerdict,
+      toneAdvice,
+      fatalFlaws,
+      upgrades,
+      thumbnailFix,
+      hook30s
+    });
+  } catch (err) {
+    res.status(500).json({ error: safeErrorMessage(err) });
+  }
+});
+
+// Curated Discovery Packages (Caixa Mágica / DottiFinder Pack)
+app.get('/api/viral/package/latest', (_req, res) => {
+  try {
+    const oppChannels = researchStore.listOpportunityChannels(24);
+    let packChannels = [];
+
+    if (oppChannels && oppChannels.length >= 4) {
+      packChannels = oppChannels.slice(0, 12).map((c, idx) => ({
+        channelId: c.channelId || `ch-pack-${idx}`,
+        title: c.channelTitle || `Canal Viral ${idx + 1}`,
+        handle: c.handle || `@canal${idx + 1}`,
+        subscribers: Number(c.subscriberCount) || 15000 + idx * 5000,
+        videoCount: Number(c.channelVideoCount ?? c.videosAnalyzed) || 12 + idx,
+        ageDays: c.firstUploadAgeDays ?? c.channelAgeDays ?? 85,
+        avgViews: Number(c.topVideo?.viewCount) ? Math.round(Number(c.topVideo.viewCount) * 0.7) : 120000 + idx * 30000,
+        niche: c.fingerprint?.label || 'Faceless Intelligence',
+        badge: idx === 0 ? 'RARO' : (idx % 2 === 0 ? '🔥 Em Alta' : '🍼 Bebê'),
+        badgeColor: idx === 0 ? '#38bdf8' : (idx % 2 === 0 ? '#f59e0b' : '#a855f7'),
+        topVideos: [
+          c.topVideo || {
+            videoId: `pack-v1-${idx}`,
+            title: `Outlier Descoberto: O Mistério de ${c.channelTitle}`,
+            viewCount: 450000 + idx * 80000,
+            duration: '14:22',
+            multiplier: `${(5.5 + idx).toFixed(1)}x`,
+            thumbnail: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=640&q=80',
+            publishedDaysAgo: 12 + idx
+          }
+        ]
+      }));
+    } else {
+      packChannels = getSeedPackageChannels();
+    }
+
+    res.json({
+      ok: true,
+      packageId: 'pack_' + Date.now(),
+      title: 'Pacote de Descoberta Viral',
+      channelCount: 161,
+      channels: packChannels,
+      teaserVideos: packChannels.flatMap(c => c.topVideos || [c.topVideo].filter(Boolean)).slice(0, 8),
+      generatedAt: new Date().toISOString()
+    });
+  } catch (err) {
+    res.status(500).json({ error: safeErrorMessage(err) });
+  }
+});
+
+// Similar channels correlated search
+app.get('/api/viral/similar/:channelId', (req, res) => {
+  try {
+    const { channelId } = req.params;
+    const all = researchStore.listOpportunityChannels(200);
+    const seeds = getSeedPackageChannels();
+    const combined = [...all, ...seeds.filter(s => !all.some(a => a.channelId === s.channelId))];
+    const target = combined.find(c => c.channelId === channelId) || { channelTitle: channelId, fingerprint: {} };
+
+    const kw = (target.fingerprint?.label || target.niche || target.channelTitle || '').toLowerCase();
+    let similar = combined
+      .filter(c => c.channelId !== channelId)
+      .filter(c => {
+        if (!kw) return true;
+        const text = `${c.channelTitle || c.title || ''} ${c.handle || ''} ${c.fingerprint?.label || c.niche || ''}`.toLowerCase();
+        return text.includes(kw) || kw.includes((c.fingerprint?.label || c.niche || '').toLowerCase());
+      })
+      .slice(0, 8);
+
+    if (!similar.length) {
+      similar = seeds.filter(c => c.channelId !== channelId).slice(0, 8);
+    }
+
+    res.json({
+      targetChannelId: channelId,
+      similarCount: similar.length || 8,
+      channels: similar
+    });
+  } catch (err) {
+    res.status(500).json({ error: safeErrorMessage(err) });
+  }
+});
+
+// Explicit DottiFinder Viral 2.0 Web Routes
+app.get(['/browser', '/boost', '/grill-me', '/grillme'], (_req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
+});
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
 });

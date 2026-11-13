@@ -138,11 +138,32 @@
   const t = key => dictionaries[state.locale]?.[key] || dictionaries.en[key] || key;
   window.VPRI18n = { t: key => t(key), locale: () => state.locale };
 
+  function detectInitialRoute() {
+    try {
+      const path = (window.location.pathname || '').replace(/^\/+|\/+$/g, '').toLowerCase();
+      const hash = (window.location.hash || '').replace(/^#\/?/, '').toLowerCase();
+      const route = hash || path;
+      if (route === 'browser') return 'browser';
+      if (route === 'boost') return 'boost';
+      if (route === 'grill-me' || route === 'grillme') return 'grillme';
+      if (route === 'opportunities') return 'opportunities';
+      if (route === 'settings') return 'settings';
+    } catch {}
+    return null;
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     bindNavigation();
     bindSettings();
     switchSettingsSection('appearance');
     loadSettings();
+
+    const initialRoute = detectInitialRoute() || 'research';
+    switchPage(initialRoute, false);
+    window.addEventListener('popstate', (e) => {
+      const target = e.state?.page || detectInitialRoute() || 'research';
+      switchPage(target, false);
+    });
   });
 
   async function loadSettings() {
@@ -208,28 +229,47 @@
     if (name === 'integrations') refreshSentinelStatus();
   }
 
-  function switchPage(page) {
-    const name = ['research', 'opportunities', 'settings'].includes(page) ? page : 'research';
+  function switchPage(page, pushHistory = true) {
+    const validPages = ['research', 'opportunities', 'settings', 'browser', 'boost', 'grillme'];
+    const target = page === 'grill-me' ? 'grillme' : page;
+    const name = validPages.includes(target) ? target : 'research';
     document.body.dataset.page = name;
-    document.querySelectorAll('[data-page]').forEach(button => button.classList.toggle('on', button.dataset.page === name));
+    document.querySelectorAll('[data-page]').forEach(button => {
+      const bPage = button.dataset.page === 'grill-me' ? 'grillme' : button.dataset.page;
+      button.classList.toggle('on', bPage === name);
+    });
     document.querySelectorAll('[data-page-view]').forEach(view => {
-      const active = view.dataset.pageView === name;
+      const vPage = view.dataset.pageView === 'grill-me' ? 'grillme' : view.dataset.pageView;
+      const active = vPage === name;
       view.hidden = !active;
       view.classList.toggle('on', active);
       if (active) { view.classList.remove('view-enter'); requestAnimationFrame(() => view.classList.add('view-enter')); }
     });
     const topSub = document.querySelector('#topSub');
     if (topSub) {
-      topSub.textContent = name === 'settings'
-        ? t('nav.settings')
-        : name === 'opportunities'
-          ? t('nav.opportunities')
-          : t('nav.research');
+      if (name === 'settings') topSub.textContent = t('nav.settings');
+      else if (name === 'opportunities') topSub.textContent = t('nav.opportunities');
+      else if (name === 'browser') topSub.textContent = 'Niche Finder & Channel Explorer';
+      else if (name === 'boost') topSub.textContent = 'Viral Velocity & Outlier Booster';
+      else if (name === 'grillme') topSub.textContent = 'Viral Idea & Packaging Griller';
+      else topSub.textContent = t('nav.research');
     }
     if (name === 'settings') refreshStorage();
+
+    if (pushHistory && typeof window !== 'undefined' && window.history && window.history.pushState) {
+      try {
+        const slug = name === 'grillme' ? 'grill-me' : (name === 'research' ? '' : name);
+        const newPath = slug ? '/' + slug : '/';
+        if (window.location.pathname !== newPath) {
+          window.history.pushState({ page: name }, '', newPath);
+        }
+      } catch {}
+    }
+
     document.dispatchEvent(new CustomEvent('vpr:page', { detail: { page: name } }));
     closeMobileNavigation();
   }
+  window.vprSwitchPage = switchPage;
 
   function bindSettings() {
     document.querySelectorAll('.segmented[data-setting]').forEach(group => {
@@ -697,6 +737,7 @@
     if (!response.ok) { const error = new Error(payload.error || `Request failed (${response.status})`); error.status = response.status; error.payload = payload; throw error; }
     return payload;
   }
+  window.vprRequest = request;
 
   function getPath(object, path) { return path.split('.').reduce((value, key) => value?.[key], object); }
   function setPath(object, path, value) { const keys = path.split('.'); let target = object; while (keys.length > 1) { const key = keys.shift(); target[key] ||= {}; target = target[key]; } target[keys[0]] = value; }

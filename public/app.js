@@ -159,8 +159,10 @@ document.addEventListener('DOMContentLoaded', () => {
   bindOpportunityEvents();
   initComposerNicheSeeds();
   initNetworkSupervisor();
+  initViralV2();
   document.addEventListener('vpr:page', event => {
     if (event.detail?.page === 'opportunities') loadOpportunities();
+    if (event.detail?.page === 'browser') loadBrowserView();
   });
   window.addEventListener('vpr:settings', () => {
     renderPresets();
@@ -4934,5 +4936,973 @@ function exportToCsv() {
   link.click();
   link.remove();
 }
+
+// ============================================================================
+// VIRAL RESEARCH 2.0 MODULE (DottiFinder Engine, Mystery Box & Viral Tools)
+// ============================================================================
+
+async function viralApiRequest(path, options = {}) {
+  if (typeof window.vprRequest === 'function') {
+    return await window.vprRequest(path, options);
+  }
+  const method = (options.method || 'GET').toUpperCase();
+  const init = {
+    method,
+    headers: options.body ? { 'Content-Type': 'application/json' } : {}
+  };
+  if (options.body) {
+    init.body = typeof options.body === 'string' ? options.body : JSON.stringify(options.body);
+  }
+  return await fetchJson(path, init);
+}
+const request = viralApiRequest;
+
+function safeErrorMessage(err) {
+  return err?.message || (typeof err === 'string' ? err : 'Erro inesperado');
+}
+
+function debounce(fn, delayMs = 150) {
+  let timer = null;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delayMs);
+  };
+}
+
+let audioCtx = null;
+let sfxEnabled = localStorage.getItem('vpr_sfx_enabled') !== '0';
+let confettiAnimationId = null;
+let currentDiscoveryPackage = null;
+let browserChannelsData = [];
+let activeBrowserFilter = 'all';
+let activeBrowserNiche = 'all';
+let selectedGrillPersona = 'giovanni';
+let magicBoxUnboxed = false;
+let autoUnboxTimer = null;
+
+const NICHE_KEYWORDS = {
+  all: [],
+  history: ['história', 'historia', 'antiguidade', 'império', 'imperio', 'guerra', 'militar', 'mistério', 'misterio', 'fóssil', 'fossil'],
+  science: ['ciência', 'ciencia', 'animais', 'fóssil', 'fossil', 'espaço', 'espaco', 'natureza', 'terra', 'biologia', 'universo', 'humano'],
+  cars: ['carro', 'automotivo', 'veículo', 'veiculo', 'motor', 'corrida', 'toyota', 'suv', 'camry', 'engine'],
+  tech: ['tecnologia', 'consumo', 'gadget', 'apple', 'ia', 'inteligência', 'inteligencia', 'investigação', 'investigacao', 'rótulo', 'rotulo'],
+  finance: ['finança', 'financa', 'dinheiro', 'economia', 'negócio', 'negocio', 'empresa', 'bilionário', 'bilionario', 'mercado'],
+  crime: ['crime', 'psicologia', 'assassino', 'investigação', 'investigacao', 'polícia', 'policia', 'mistério', 'mente', 'cia'],
+  military: ['militar', 'guerra', 'exército', 'exercito', 'tanque', 'armas', 'batalha', 'conflito', 'soldado'],
+  ocean: ['oceano', 'mar', 'profundo', 'abismo', 'fossa', 'submarino', 'águas', 'aguas', 'anomalia', 'criatura']
+};
+
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) audioCtx = new AudioContextClass();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume().catch(() => {});
+  }
+  return audioCtx;
+}
+
+window.addEventListener('click', () => {
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume().catch(() => {});
+  }
+}, { passive: true });
+
+function playSfx(type) {
+  if (!sfxEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+
+    if (type === 'box_rise') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(140, now);
+      osc.frequency.exponentialRampToValueAtTime(580, now + 0.6);
+      gain.gain.setValueAtTime(0.01, now);
+      gain.gain.linearRampToValueAtTime(0.22, now + 0.45);
+      gain.gain.linearRampToValueAtTime(0.001, now + 0.6);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.62);
+    } else if (type === 'box_open') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(160, now);
+      osc.frequency.exponentialRampToValueAtTime(45, now + 0.35);
+      gain.gain.setValueAtTime(0.45, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.42);
+    } else if (type === 'box_fanfare') {
+      const freqs = [523.25, 659.25, 783.99, 987.77, 1046.50];
+      freqs.forEach((f, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(f, now + idx * 0.08);
+        gain.gain.setValueAtTime(0.001, now + idx * 0.08);
+        gain.gain.linearRampToValueAtTime(0.18, now + idx * 0.08 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.5);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.08);
+        osc.stop(now + idx * 0.08 + 0.55);
+      });
+    } else if (type === 'level_up') {
+      const freqs = [440, 554.37, 659.25, 880];
+      freqs.forEach((f, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(f, now + idx * 0.1);
+        gain.gain.setValueAtTime(0.16, now + idx * 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.35);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.1);
+        osc.stop(now + idx * 0.1 + 0.38);
+      });
+    } else if (type === 'flame') {
+      const bufferSize = ctx.sampleRate * 0.4;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(400, now);
+      filter.frequency.exponentialRampToValueAtTime(1400, now + 0.2);
+      filter.frequency.exponentialRampToValueAtTime(200, now + 0.4);
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+      noise.start(now);
+      noise.stop(now + 0.4);
+    } else if (type === 'click') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, now);
+      gain.gain.setValueAtTime(0.05, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.06);
+    }
+  } catch (e) {}
+}
+
+function startConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+
+  const colors = ['#38bdf8', '#ef4444', '#10d9a4', '#f59e0b', '#a855f7', '#ffffff', '#fb7185'];
+  const particles = [];
+  const originX = rect.width / 2;
+  const originY = rect.height / 2 - 40;
+
+  for (let i = 0; i < 90; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 4 + Math.random() * 9;
+    particles.push({
+      x: originX,
+      y: originY,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 3,
+      size: 4 + Math.random() * 6,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rotation: Math.random() * 360,
+      rotSpeed: (Math.random() - 0.5) * 12,
+      gravity: 0.18 + Math.random() * 0.1,
+      drag: 0.96,
+      opacity: 1
+    });
+  }
+
+  const startTime = Date.now();
+  function animate() {
+    const elapsed = Date.now() - startTime;
+    if (elapsed > 4200) {
+      ctx.clearRect(0, 0, rect.width, rect.height);
+      return;
+    }
+    ctx.clearRect(0, 0, rect.width, rect.height);
+
+    for (const p of particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += p.gravity;
+      p.vx *= p.drag;
+      p.vy *= p.drag;
+      p.rotation += p.rotSpeed;
+      if (elapsed > 2800) {
+        p.opacity = Math.max(0, 1 - (elapsed - 2800) / 1400);
+      }
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.rotation * Math.PI) / 180);
+      ctx.globalAlpha = p.opacity;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.65);
+      ctx.restore();
+    }
+
+    confettiAnimationId = requestAnimationFrame(animate);
+  }
+
+  if (confettiAnimationId) cancelAnimationFrame(confettiAnimationId);
+  animate();
+}
+
+async function loadGamification() {
+  try {
+    const res = await viralApiRequest('/api/gamification/profile');
+    if (res) updateGamificationUI(res);
+  } catch (e) {}
+}
+
+function updateGamificationUI(data) {
+  const levelText = document.getElementById('garimpoLevelText');
+  const xpText = document.getElementById('garimpoXpText');
+  const xpFill = document.getElementById('garimpoXpFill');
+  const foundText = document.getElementById('garimpoChannelsFoundText');
+
+  if (levelText && data.level) levelText.textContent = `NV ${data.level} ${data.title}`;
+  if (xpText && data.xpMax) xpText.textContent = `${data.xp} / ${data.xpMax}`;
+  if (xpFill && data.xpMax) {
+    const pct = Math.min(100, Math.round((data.xp / Math.max(1, data.xpMax)) * 100));
+    xpFill.style.width = `${pct}%`;
+  }
+  if (foundText && data.channelsFound) {
+    foundText.textContent = `+${Number(data.channelsFound).toLocaleString()} canais`;
+  }
+}
+
+async function awardGarimpoXp(action, bonus = 10) {
+  try {
+    const res = await viralApiRequest('/api/gamification/action', {
+      method: 'POST',
+      body: { action, xpBonus: bonus }
+    });
+    if (res?.ok) {
+      updateGamificationUI(res);
+      if (res.leveledUp) {
+        playSfx('level_up');
+        showToast(`🎉 SUBIU DE NÍVEL! Agora você é ${res.title} (NV ${res.level})!`, 'success');
+      }
+    }
+  } catch (e) {}
+}
+
+async function openMagicBoxModal() {
+  const modal = document.getElementById('magicBoxModalBackdrop');
+  if (!modal) return;
+  modal.hidden = false;
+  magicBoxUnboxed = false;
+
+  const pack = document.getElementById('magicUnboxingPack');
+  const banner = document.getElementById('magicRevealBanner');
+  const teaser = document.getElementById('magicTeaserStrip');
+  const rays = document.getElementById('sunburstRays');
+
+  if (pack) {
+    pack.classList.remove('pack-exploding', 'pack-opened');
+    pack.classList.add('pack-ready');
+    pack.onclick = () => {
+      if (autoUnboxTimer) clearTimeout(autoUnboxTimer);
+      if (!magicBoxUnboxed) triggerPackUnboxing();
+    };
+  }
+  if (banner) banner.classList.remove('revealed');
+  if (teaser) teaser.classList.remove('revealed');
+  if (rays) rays.classList.remove('spinning-fast');
+
+  if (autoUnboxTimer) clearTimeout(autoUnboxTimer);
+  autoUnboxTimer = setTimeout(() => {
+    if (!magicBoxUnboxed) triggerPackUnboxing();
+  }, 1000);
+
+  playSfx('box_rise');
+
+  try {
+    const res = await viralApiRequest('/api/viral/package/latest');
+    currentDiscoveryPackage = res;
+    const badge = document.getElementById('magicCountBadge');
+    if (badge && res?.channelCount) {
+      badge.textContent = `${res.channelCount} CANAIS`;
+    }
+    const bannerCount = document.getElementById('packageChannelCount');
+    if (bannerCount && res?.channelCount) {
+      bannerCount.textContent = res.channelCount;
+    }
+
+    if (teaser && res?.teaserVideos) {
+      teaser.innerHTML = res.teaserVideos.map(v => `
+        <div class="magic-teaser-card" data-video-target="${escapeAttr(v.videoId || '')}">
+          <div class="magic-teaser-thumb-wrap">
+            <img src="${escapeAttr(v.thumbnail || v.thumbnailUrl || defaultThumbnail(v.videoId))}" alt="${escapeAttr(v.title)}" loading="lazy">
+            <span class="magic-teaser-mult">${escapeHtml(v.multiplier || '🔥 Outlier')}</span>
+          </div>
+          <div class="magic-teaser-info">
+            <div class="magic-teaser-title" title="${escapeAttr(v.title)}">${escapeHtml(v.title)}</div>
+            <div class="magic-teaser-views">${formatCompact(v.viewCount)} views</div>
+          </div>
+        </div>
+      `).join('');
+    }
+  } catch (e) {
+    console.error('Failed to load discovery package:', e);
+  }
+}
+
+function triggerPackUnboxing() {
+  if (magicBoxUnboxed) return;
+  magicBoxUnboxed = true;
+
+  const pack = document.getElementById('magicUnboxingPack');
+  const banner = document.getElementById('magicRevealBanner');
+  const teaser = document.getElementById('magicTeaserStrip');
+  const rays = document.getElementById('sunburstRays');
+
+  if (pack) {
+    pack.classList.remove('pack-ready');
+    pack.classList.add('pack-exploding');
+  }
+  if (rays) rays.classList.add('spinning-fast');
+
+  playSfx('box_open');
+
+  setTimeout(() => {
+    if (pack) {
+      pack.classList.remove('pack-exploding');
+      pack.classList.add('pack-opened');
+    }
+    playSfx('box_fanfare');
+    startConfetti();
+
+    if (banner) banner.classList.add('revealed');
+    if (teaser) teaser.classList.add('revealed');
+
+    awardGarimpoXp('open_mystery_box', 25);
+  }, 350);
+}
+
+function closeMagicBoxModal() {
+  const modal = document.getElementById('magicBoxModalBackdrop');
+  if (modal) modal.hidden = true;
+  magicBoxUnboxed = false;
+  if (autoUnboxTimer) {
+    clearTimeout(autoUnboxTimer);
+    autoUnboxTimer = null;
+  }
+  if (confettiAnimationId) {
+    cancelAnimationFrame(confettiAnimationId);
+    confettiAnimationId = null;
+  }
+  const canvas = document.getElementById('confettiCanvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
+async function loadBrowserView() {
+  try {
+    const res = await viralApiRequest('/api/opportunities?view=recommended&limit=300');
+    let channels = res?.channels || [];
+    if (!channels.length) {
+      const packRes = await viralApiRequest('/api/viral/package/latest');
+      if (packRes?.channels?.length) {
+        currentDiscoveryPackage = packRes;
+        channels = packRes.channels;
+      }
+    }
+    browserChannelsData = channels;
+    renderBrowserChannels();
+  } catch (e) {
+    if (currentDiscoveryPackage?.channels?.length) {
+      browserChannelsData = currentDiscoveryPackage.channels;
+      renderBrowserChannels();
+    }
+  }
+}
+
+function renderBrowserChannels() {
+  const container = document.getElementById('browserChannelGrid');
+  const countEl = document.getElementById('browserTotalChannelsCount');
+  if (!container) return;
+
+  const search = (document.getElementById('browserSearchInput')?.value || '').toLowerCase().trim();
+
+  let filtered = browserChannelsData.filter(ch => {
+    if (search) {
+      const text = `${ch.channelTitle || ch.title || ''} ${ch.handle || ''} ${ch.fingerprint?.label || ch.niche || ''}`.toLowerCase();
+      if (!text.includes(search)) return false;
+    }
+    if (activeBrowserNiche !== 'all') {
+      const kws = NICHE_KEYWORDS[activeBrowserNiche] || [];
+      const channelText = `${ch.channelTitle || ch.title || ''} ${ch.fingerprint?.label || ch.niche || ''}`.toLowerCase();
+      const matchNiche = kws.length === 0 || kws.some(kw => channelText.includes(kw));
+      if (!matchNiche) return false;
+    }
+    if (activeBrowserFilter === 'top_views') {
+      return (Number(ch.topVideo?.viewCount || ch.avgViews) || 0) >= 200000;
+    }
+    if (activeBrowserFilter === 'high_vph') {
+      const top = ch.topVideo || (ch.topVideos && ch.topVideos[0]) || {};
+      const ageH = Math.max(1, (Date.now() - new Date(top.publishedAt || Date.now() - 14 * 86400000).getTime()) / 3600000);
+      const vph = (Number(top.viewCount) || 0) / ageH;
+      return vph >= 50;
+    }
+    if (activeBrowserFilter === 'outliers_2x') {
+      const top = ch.topVideo || (ch.topVideos && ch.topVideos[0]) || {};
+      const mult = Number(top.outlierScore ?? ch.medianOutlier) || (Number(top.viewCount) / Math.max(100, Number(ch.subscriberCount || ch.subscribers)));
+      return mult >= 2.0;
+    }
+    if (activeBrowserFilter === 'babies') {
+      const age = ch.firstUploadAgeDays ?? ch.channelAgeDays ?? ch.ageDays;
+      return age !== null && age !== undefined && Number(age) <= 75;
+    }
+    if (activeBrowserFilter === 'formula63k') {
+      const subs = Number(ch.subscriberCount || ch.subscribers) || 0;
+      const views = Number(ch.topVideo?.viewCount || ch.avgViews) || 0;
+      return subs <= 150000 && views >= 50000;
+    }
+    if (activeBrowserFilter === 'arbitrage') {
+      return Boolean(ch.arbitrage?.inexploredBrazil);
+    }
+    return true;
+  });
+
+  if (countEl) countEl.textContent = `${filtered.length} canais`;
+
+  if (!filtered.length) {
+    container.innerHTML = `<div class="empty" style="padding:40px; text-align:center; color:var(--muted);">Nenhum canal encontrado com os filtros selecionados. Experimente buscar por outro nicho!</div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(ch => renderDottiChannelCardHtml(ch)).join('');
+  bindDottiCardEvents(container);
+}
+
+function renderDottiChannelCardHtml(ch) {
+  const id = ch.channelId || ch.id || '';
+  const title = ch.channelTitle || ch.title || 'Canal Desconhecido';
+  const subs = Number(ch.subscriberCount || ch.subscribers) || 0;
+  const vids = Number(ch.channelVideoCount ?? ch.videoCount ?? ch.videosAnalyzed) || 0;
+  const age = ch.firstUploadAgeDays ?? ch.channelAgeDays ?? ch.ageDays ?? 90;
+  const avgViews = Number(ch.topVideo?.viewCount || ch.avgViews) || 120000;
+  const niche = ch.fingerprint?.label || ch.niche || 'Geral';
+  const isBaby = age <= 75;
+  const badgeLabel = isBaby ? '🍼 Bebê' : (ch.badge || '🔥 Em Alta');
+  const badgeColor = isBaby ? '#a855f7' : (ch.badgeColor || '#f59e0b');
+
+  const topVideos = ch.topVideos || [ch.topVideo].filter(Boolean);
+  if (!topVideos.length) {
+    topVideos.push({
+      videoId: 'sample_' + id,
+      title: `Vídeo Outlier de ${title}`,
+      viewCount: avgViews,
+      duration: '14:20',
+      multiplier: '8.4x',
+      thumbnail: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=640&q=80',
+      publishedDaysAgo: 15
+    });
+  }
+
+  return `
+    <article class="channel-card-dotti" data-dotti-channel-id="${escapeAttr(id)}">
+      <div class="channel-dotti-head">
+        <div class="channel-dotti-identity">
+          <div class="channel-dotti-avatar">
+            ${ch.avatarUrl ? `<img src="${escapeAttr(ch.avatarUrl)}" alt="">` : title.charAt(0).toUpperCase()}
+          </div>
+          <div class="channel-dotti-name-block">
+            <div class="channel-dotti-title">
+              <strong>${escapeHtml(title)}</strong>
+              <span class="dotti-tag-niche">${escapeHtml(niche)}</span>
+              <span class="dotti-tag-status" style="background:${badgeColor}22; color:${badgeColor}; border:1px solid ${badgeColor}44;">${escapeHtml(badgeLabel)}</span>
+            </div>
+            <div class="channel-dotti-stats-row">
+              <span><b>${metricCompact(subs)}</b> inscritos</span>
+              <span>•</span>
+              <span><b>${vids}</b> vídeos</span>
+              <span>•</span>
+              <span><b>${age}</b> dias de vida</span>
+              <span>•</span>
+              <span class="highlight-gold"><b>${metricCompact(avgViews)}</b> média por vídeo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="channel-dotti-actions">
+          <button type="button" class="dotti-act-btn" data-save-channel="${escapeAttr(id)}">
+            <span>⭐ Salvar</span>
+          </button>
+          <button type="button" class="dotti-act-btn" data-find-similar="${escapeAttr(id)}">
+            <span>🔀 Parecidos</span>
+          </button>
+          <button type="button" class="dotti-act-btn primary" data-make-blueprint="${escapeAttr(id)}">
+            <span>⚡ Blueprint</span>
+          </button>
+          <button type="button" class="dotti-act-btn" data-dotti-detail="${escapeAttr(id)}">
+            <span>Dossiê →</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="channel-videos-strip">
+        ${topVideos.slice(0, 4).map(v => `
+          <div class="strip-video-card" data-video-target="${escapeAttr(v.videoId || id)}">
+            <div class="strip-thumb-wrap">
+              <img src="${escapeAttr(v.thumbnail || v.thumbnailUrl || defaultThumbnail(v.videoId))}" alt="${escapeAttr(v.title)}" loading="lazy">
+              ${v.durationSeconds || v.duration ? `<span class="strip-duration-badge">${v.duration || formatDurationClient(v.durationSeconds)}</span>` : ''}
+              <span class="strip-mult-badge ${Number(v.outlierScore || parseFloat(v.multiplier)) >= 10 ? 'high' : ''}">${v.multiplier || (v.outlierScore ? `${trim(v.outlierScore)}x` : '⚡ Outlier')}</span>
+            </div>
+            <div class="strip-content">
+              <div class="strip-title" title="${escapeAttr(v.title)}">${escapeHtml(v.title || 'Vídeo Outlier')}</div>
+              <div class="strip-meta">
+                <span style="color:#38bdf8; font-weight:700;">${metricCompact(v.viewCount)} views</span>
+                <span>${v.publishedDaysAgo ? `há ${v.publishedDaysAgo}d` : formatPublishedAge(v.publishedAt)}</span>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </article>
+  `;
+}
+
+function openChannelBlueprintModal(channelId) {
+  if (!channelId) return;
+  const ch = browserChannelsData.find(c => (c.channelId || c.id) === channelId);
+  const target = ch ? {
+    channelId: ch.channelId || ch.id,
+    channelTitle: ch.channelTitle || ch.title,
+    subscriberCount: ch.subscriberCount || ch.subscribers,
+    topVideo: ch.topVideo || (ch.topVideos && ch.topVideos[0]) || {
+      videoId: 'v_' + channelId,
+      title: `Documentário Estratégico: O Método de ${ch.channelTitle || ch.title}`,
+      thumbnail: ch.avatarUrl,
+      viewCount: ch.avgViews || 150000
+    }
+  } : { channelId, channelTitle: channelId };
+
+  if (typeof openViralBlueprintModal === 'function') {
+    openViralBlueprintModal(target);
+  }
+}
+
+function bindDottiCardEvents(container) {
+  container.querySelectorAll('[data-save-channel]').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.saveChannel;
+      pinChannel(id, true);
+      btn.innerHTML = '<span>⭐ Salvo!</span>';
+      btn.style.color = '#f59e0b';
+      awardGarimpoXp('save_channel', 10);
+      playSfx('click');
+    };
+  });
+
+  container.querySelectorAll('[data-find-similar]').forEach(btn => {
+    btn.onclick = async (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.findSimilar;
+      playSfx('click');
+      showToast('Buscando canais concorrentes parecidos no mesmo nicho...', 'info');
+      try {
+        const res = await viralApiRequest(`/api/viral/similar/${encodeURIComponent(id)}`);
+        if (res?.channels?.length) {
+          browserChannelsData = res.channels;
+          renderBrowserChannels();
+          showToast(`${res.channels.length} canais parecidos encontrados!`, 'success');
+        }
+      } catch (err) {
+        showToast('Erro ao buscar canais parecidos: ' + safeErrorMessage(err), 'error');
+      }
+    };
+  });
+
+  container.querySelectorAll('[data-make-blueprint]').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.makeBlueprint;
+      playSfx('click');
+      openChannelBlueprintModal(id);
+    };
+  });
+
+  container.querySelectorAll('[data-dotti-detail]').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.dottiDetail;
+      playSfx('click');
+      openChannelDetail(id);
+    };
+  });
+
+  container.querySelectorAll('.strip-video-card').forEach(card => {
+    card.onclick = () => {
+      playSfx('click');
+      const vid = card.dataset.videoTarget;
+      const chId = card.closest('[data-dotti-channel-id]')?.dataset.dottiChannelId;
+      const ch = browserChannelsData.find(c => (c.channelId || c.id) === chId);
+      const topVids = ch?.topVideos || (ch?.topVideo ? [ch.topVideo] : []);
+      const matchedVideo = topVids.find(v => (v.videoId || v.id) === vid);
+
+      const videoObj = matchedVideo ? {
+        videoId: matchedVideo.videoId || vid,
+        title: matchedVideo.title || card.querySelector('.strip-title')?.textContent || 'Vídeo Outlier',
+        thumbnail: matchedVideo.thumbnail || matchedVideo.thumbnailUrl || card.querySelector('img')?.src,
+        channelTitle: ch?.channelTitle || ch?.title || 'Canal',
+        viewCount: matchedVideo.viewCount || ch?.avgViews || 100000,
+        subscriberCount: ch?.subscriberCount || ch?.subscribers || 10000
+      } : {
+        videoId: vid,
+        title: card.querySelector('.strip-title')?.textContent || 'Vídeo Outlier',
+        thumbnail: card.querySelector('img')?.src,
+        channelTitle: ch?.channelTitle || ch?.title || 'Canal',
+        viewCount: ch?.avgViews || 100000,
+        subscriberCount: ch?.subscriberCount || ch?.subscribers || 10000
+      };
+
+      if (typeof openVideoDeconstructor === 'function') {
+        openVideoDeconstructor(videoObj);
+      }
+    };
+  });
+}
+
+function initBoostWorkspace() {
+  const calcBtn = document.getElementById('runBoostCalculationBtn');
+  if (!calcBtn) return;
+
+  calcBtn.onclick = async () => {
+    playSfx('click');
+    const title = document.getElementById('boostTitleInput')?.value || '';
+    const views = Number(document.getElementById('boostViewsInput')?.value) || 10000;
+    const subs = Number(document.getElementById('boostSubsInput')?.value) || 1000;
+    const ageHours = Number(document.getElementById('boostAgeHoursInput')?.value) || 24;
+    const duration = Number(document.getElementById('boostDurationInput')?.value) || 12;
+
+    calcBtn.disabled = true;
+    calcBtn.innerHTML = '<span>⚡ Calculando dinâmica viral...</span>';
+
+    try {
+      const res = await viralApiRequest('/api/viral/boost/analyze', {
+        method: 'POST',
+        body: {
+          title,
+          views,
+          subscribers: subs,
+          durationSeconds: duration * 60,
+          publishedAt: new Date(Date.now() - ageHours * 3600000).toISOString()
+        }
+      });
+
+      if (res) {
+        animateScoreCount('boostScoreDisplay', res.boostScore || 85);
+        const tier = document.getElementById('boostTierBadge');
+        if (tier) {
+          tier.textContent = res.ratingLabel;
+          tier.style.background = res.viralityColor;
+          tier.style.color = '#06110f';
+        }
+        const vphEl = document.getElementById('boostVphDisplay');
+        if (vphEl) vphEl.textContent = `${Number(res.metrics.vph).toLocaleString()} views/hora`;
+        const multEl = document.getElementById('boostMultiplierDisplay');
+        if (multEl) multEl.textContent = `${res.metrics.multiplier}x a base`;
+        const advEl = document.getElementById('boostAdviceText');
+        if (advEl && res.algorithmHacks) {
+          advEl.textContent = `${res.algorithmHacks.optimalDuration}. ${res.algorithmHacks.curiosityAudit}`;
+        }
+        playSfx('box_fanfare');
+        awardGarimpoXp('boost_calc', 15);
+      }
+    } catch (err) {
+      showToast('Erro ao calcular boost viral: ' + safeErrorMessage(err), 'error');
+    } finally {
+      calcBtn.disabled = false;
+      calcBtn.innerHTML = '<span>⚡ Calcular Aceleração Viral</span>';
+    }
+  };
+}
+
+function animateScoreCount(elementId, targetValue) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  let current = 0;
+  const step = Math.max(1, Math.floor(targetValue / 20));
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= targetValue) {
+      current = targetValue;
+      clearInterval(timer);
+    }
+    el.textContent = current;
+  }, 25);
+}
+
+function initGrillMeWorkspace() {
+  document.querySelectorAll('.grill-persona-chip').forEach(chip => {
+    chip.onclick = () => {
+      playSfx('click');
+      document.querySelectorAll('.grill-persona-chip').forEach(c => c.classList.remove('on'));
+      chip.classList.add('on');
+      selectedGrillPersona = chip.dataset.persona || 'giovanni';
+    };
+  });
+
+  const grillBtn = document.getElementById('runGrillMeBtn');
+  if (!grillBtn) return;
+
+  grillBtn.onclick = async () => {
+    const title = document.getElementById('grillTitleInput')?.value || '';
+    const niche = document.getElementById('grillNicheInput')?.value || '';
+    const thumb = document.getElementById('grillThumbInput')?.value || '';
+
+    if (!title.trim()) {
+      showToast('Por favor, insira um título ou ideia para colocar na grelha!', 'info');
+      return;
+    }
+
+    playSfx('flame');
+    grillBtn.disabled = true;
+    grillBtn.innerHTML = '<span>🔥 Grelhando seu título impiedosamente...</span>';
+
+    try {
+      const res = await viralApiRequest('/api/viral/grill-me', {
+        method: 'POST',
+        body: { title, niche, thumbnailIdea: thumb, persona: selectedGrillPersona }
+      });
+
+      if (res) {
+        const report = document.getElementById('grillReportGrid');
+        if (report) report.hidden = false;
+
+        const badge = document.getElementById('grillScoreBadge');
+        if (badge) {
+          badge.textContent = `NOTA: ${res.viralScore}/100`;
+          badge.style.background = res.viralScore >= 75 ? '#10d9a4' : (res.viralScore >= 50 ? '#f59e0b' : '#ef4444');
+          badge.style.color = res.viralScore >= 75 ? '#06110f' : '#ffffff';
+        }
+
+        const verdict = document.getElementById('grillVerdictBox');
+        if (verdict) verdict.textContent = `"${res.verdict}"`;
+
+        const flaws = document.getElementById('grillFlawsContainer');
+        if (flaws && Array.isArray(res.fatalFlaws)) {
+          flaws.innerHTML = res.fatalFlaws.map((fl, i) => `
+            <div class="grill-flaw-item">
+              <span style="font-weight:900; color:#ef4444;">${i + 1}.</span>
+              <span>${escapeHtml(fl)}</span>
+            </div>
+          `).join('');
+        }
+
+        const upgrades = document.getElementById('grillUpgradesContainer');
+        if (upgrades && Array.isArray(res.upgrades)) {
+          upgrades.innerHTML = res.upgrades.map(u => `
+            <div class="grill-upgrade-item">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="grill-upgrade-formula">${escapeHtml(u.angle)}</span>
+                <span style="font-size:10px; font-weight:800; color:#10d9a4;">${escapeHtml(u.ctrMultiplier)}</span>
+              </div>
+              <div class="grill-upgrade-title">${escapeHtml(u.title)}</div>
+              <div class="grill-upgrade-formula">${escapeHtml(u.formula)}</div>
+            </div>
+          `).join('');
+        }
+
+        const hook = document.getElementById('grillHookScript');
+        if (hook) hook.textContent = `"${res.hook30s}"`;
+
+        const copyBtn = document.getElementById('copyGrillPackageBtn');
+        if (copyBtn) {
+          copyBtn.onclick = () => {
+            const upTitles = (res.upgrades || []).map((u, i) => `${i + 1}. ${u.title}`).join('\n');
+            const fullText = `# PACOTE VIRAL 10X (GRILL-ME AI ROAST)\n\nTítulo Original: "${title}"\nNota: ${res.viralScore}/100\n\n## TÍTULOS DE ALTO CTR:\n${upTitles}\n\n## GANCHO DIRECT-TO-ACTION (30s):\n${res.hook30s}\n\n## EMBALAGEM DE THUMBNAIL:\n${res.thumbnailFix?.composition}\nContraste: ${res.thumbnailFix?.colorContrast}`;
+            navigator.clipboard.writeText(fullText);
+            copyBtn.innerHTML = '<span>Copiado com Sucesso! 📋</span>';
+            setTimeout(() => { copyBtn.innerHTML = '<svg width="14" height="14"><use href="lucide-sprite.svg#copy"></use></svg><span>Copiar Pacote Completo (Títulos + Gancho)</span>'; }, 2000);
+          };
+        }
+
+        awardGarimpoXp('grill_me', 20);
+        showToast('Diagnóstico concluído! Role para ver os títulos 10x.', 'success');
+      }
+    } catch (err) {
+      showToast('Erro ao executar roast: ' + safeErrorMessage(err), 'error');
+    } finally {
+      grillBtn.disabled = false;
+      grillBtn.innerHTML = '<span>🔥 GRILL ME AGORA!</span>';
+    }
+  };
+}
+
+function bindDottiSidebarAndHeader() {
+  document.querySelectorAll('[data-dotti-action]').forEach(btn => {
+    btn.onclick = () => {
+      playSfx('click');
+      const action = btn.dataset.dottiAction;
+      if (action === 'news') {
+        window.vprSwitchPage('research');
+        openMagicBoxModal();
+      } else if (action === 'top10') {
+        activeBrowserFilter = 'outliers_2x';
+        document.querySelectorAll('#browserTabPills [data-browser-filter]').forEach(p => p.classList.toggle('on', p.dataset.browserFilter === 'outliers_2x'));
+        window.vprSwitchPage('browser');
+        loadBrowserView();
+      } else if (action === 'mybase' || action === 'saved') {
+        window.vprSwitchPage('opportunities');
+      } else if (action === 'similar' || action === 'trending' || action === 'babies' || action === 'breakout') {
+        if (action === 'babies') {
+          activeBrowserFilter = 'babies';
+          document.querySelectorAll('#browserTabPills [data-browser-filter]').forEach(p => p.classList.toggle('on', p.dataset.browserFilter === 'babies'));
+        } else if (action === 'breakout') {
+          activeBrowserFilter = 'outliers_2x';
+          document.querySelectorAll('#browserTabPills [data-browser-filter]').forEach(p => p.classList.toggle('on', p.dataset.browserFilter === 'outliers_2x'));
+        } else if (action === 'trending') {
+          activeBrowserFilter = 'high_vph';
+          document.querySelectorAll('#browserTabPills [data-browser-filter]').forEach(p => p.classList.toggle('on', p.dataset.browserFilter === 'high_vph'));
+        }
+        window.vprSwitchPage('browser');
+        loadBrowserView();
+      } else if (action === 'niches') {
+        window.vprSwitchPage('research');
+        document.querySelector('[data-view="niches"]')?.click();
+      } else if (action === 'titles') {
+        window.vprSwitchPage('research');
+        window.scrollTo({ top: 300, behavior: 'smooth' });
+      } else if (action === 'blueprints') {
+        window.vprSwitchPage('opportunities');
+        document.querySelector('[data-opportunity-view="blueprints"]')?.click();
+      }
+    };
+  });
+
+  const soundBtn = document.getElementById('dottiSoundToggleBtn');
+  const soundLabel = document.getElementById('dottiSoundLabel');
+  if (soundBtn) {
+    soundBtn.onclick = () => {
+      sfxEnabled = !sfxEnabled;
+      localStorage.setItem('vpr_sfx_enabled', sfxEnabled ? '1' : '0');
+      if (soundLabel) soundLabel.textContent = sfxEnabled ? '🔊 Som: ON' : '🔇 Som: OFF';
+      if (sfxEnabled) playSfx('click');
+    };
+    if (soundLabel) soundLabel.textContent = sfxEnabled ? '🔊 Som: ON' : '🔇 Som: OFF';
+  }
+
+  const trainBtn = document.getElementById('dottiTrainBtn');
+  if (trainBtn) {
+    trainBtn.onclick = () => {
+      playSfx('click');
+      window.vprSwitchPage('settings');
+      document.querySelector('[data-settings-section="research"]')?.click();
+      window.scrollTo({ top: 400, behavior: 'smooth' });
+    };
+  }
+
+  const openPackBannerBtn = document.getElementById('openMagicBoxBtn');
+  const openPackHeaderBtn = document.getElementById('dottiOpenPackHeaderBtn');
+  const closePackBtn = document.getElementById('closeMagicBoxBtn');
+  const seeChannelsBtn = document.getElementById('magicSeeChannelsBtn');
+  const modalBackdrop = document.getElementById('magicBoxModalBackdrop');
+
+  if (openPackBannerBtn) openPackBannerBtn.onclick = openMagicBoxModal;
+  if (openPackHeaderBtn) openPackHeaderBtn.onclick = openMagicBoxModal;
+  if (closePackBtn) closePackBtn.onclick = closeMagicBoxModal;
+  if (modalBackdrop) {
+    modalBackdrop.onclick = (e) => {
+      if (e.target === modalBackdrop) closeMagicBoxModal();
+    };
+  }
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('magicBoxModalBackdrop');
+      if (modal && !modal.hidden) closeMagicBoxModal();
+    }
+  });
+
+  if (seeChannelsBtn) {
+    seeChannelsBtn.onclick = () => {
+      closeMagicBoxModal();
+      window.vprSwitchPage('browser');
+      loadBrowserView();
+    };
+  }
+
+  document.querySelectorAll('#browserTabPills [data-browser-filter]').forEach(pill => {
+    pill.onclick = () => {
+      playSfx('click');
+      document.querySelectorAll('#browserTabPills [data-browser-filter]').forEach(p => p.classList.remove('on'));
+      pill.classList.add('on');
+      activeBrowserFilter = pill.dataset.browserFilter || 'all';
+      renderBrowserChannels();
+    };
+  });
+
+  document.querySelectorAll('#browserNicheStrip [data-browser-niche]').forEach(pill => {
+    pill.onclick = () => {
+      playSfx('click');
+      document.querySelectorAll('#browserNicheStrip [data-browser-niche]').forEach(p => p.classList.remove('on'));
+      pill.classList.add('on');
+      activeBrowserNiche = pill.dataset.browserNiche || 'all';
+      renderBrowserChannels();
+    };
+  });
+
+  const searchInput = document.getElementById('browserSearchInput');
+  if (searchInput) {
+    searchInput.oninput = debounce(() => renderBrowserChannels(), 180);
+  }
+
+  const randomBtn = document.getElementById('browserRandomBtn');
+  if (randomBtn) {
+    randomBtn.onclick = () => {
+      playSfx('click');
+      if (browserChannelsData.length) {
+        const rand = browserChannelsData[Math.floor(Math.random() * browserChannelsData.length)];
+        if (searchInput) searchInput.value = rand.channelTitle || rand.title || '';
+        renderBrowserChannels();
+      }
+    };
+  }
+}
+
+function initViralV2() {
+  loadGamification();
+  bindDottiSidebarAndHeader();
+  initBoostWorkspace();
+  initGrillMeWorkspace();
+  if (document.body.dataset.page === 'browser') {
+    loadBrowserView();
+  }
+}
+
 
 
