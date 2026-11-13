@@ -5042,7 +5042,7 @@ function playSfx(type) {
       osc.start(now);
       osc.stop(now + 0.42);
     } else if (type === 'box_fanfare') {
-      const freqs = [523.25, 659.25, 783.99, 987.77, 1046.50];
+      const freqs = [523.25, 659.25, 783.99, 1046.50, 1318.51];
       freqs.forEach((f, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
@@ -5117,7 +5117,7 @@ function startConfetti() {
   canvas.height = rect.height * dpr;
   ctx.scale(dpr, dpr);
 
-  const colors = ['#38bdf8', '#ef4444', '#10d9a4', '#f59e0b', '#a855f7', '#ffffff', '#fb7185'];
+  const colors = ['#10b981', '#34d399', '#06d6a0', '#38bdf8', '#fbbf24', '#ffffff', '#a7f3d0'];
   const particles = [];
   const originX = rect.width / 2;
   const originY = rect.height / 2 - 40;
@@ -5259,8 +5259,8 @@ async function openMagicBoxModal() {
     }
 
     if (teaser && res?.teaserVideos) {
-      teaser.innerHTML = res.teaserVideos.map(v => `
-        <div class="magic-teaser-card" data-video-target="${escapeAttr(v.videoId || '')}">
+      teaser.innerHTML = res.teaserVideos.map((v, idx) => `
+        <div class="magic-teaser-card" style="animation-delay: ${idx * 65}ms" data-video-target="${escapeAttr(v.videoId || '')}">
           <div class="magic-teaser-thumb-wrap">
             <img src="${escapeAttr(v.thumbnail || v.thumbnailUrl || defaultThumbnail(v.videoId))}" alt="${escapeAttr(v.title)}" loading="lazy">
             <span class="magic-teaser-mult">${escapeHtml(v.multiplier || '🔥 Outlier')}</span>
@@ -5301,6 +5301,21 @@ function triggerPackUnboxing() {
     }
     playSfx('box_fanfare');
     startConfetti();
+
+    const badge = document.getElementById('magicCountBadge');
+    if (badge) {
+      const targetCount = currentDiscoveryPackage?.channelCount || 161;
+      let cur = 0;
+      const step = Math.max(1, Math.floor(targetCount / 18));
+      const counterTimer = setInterval(() => {
+        cur += step;
+        if (cur >= targetCount) {
+          cur = targetCount;
+          clearInterval(counterTimer);
+        }
+        badge.textContent = `${cur} CANAIS`;
+      }, 20);
+    }
 
     if (banner) banner.classList.add('revealed');
     if (teaser) teaser.classList.add('revealed');
@@ -5707,7 +5722,7 @@ function initGrillMeWorkspace() {
         const badge = document.getElementById('grillScoreBadge');
         if (badge) {
           badge.textContent = `NOTA: ${res.viralScore}/100`;
-          badge.style.background = res.viralScore >= 75 ? '#10d9a4' : (res.viralScore >= 50 ? '#f59e0b' : '#ef4444');
+          badge.style.background = res.viralScore >= 75 ? '#10d9a4' : (res.viralScore >= 50 ? '#f59e0b' : '#d97706');
           badge.style.color = res.viralScore >= 75 ? '#06110f' : '#ffffff';
         }
 
@@ -5718,7 +5733,7 @@ function initGrillMeWorkspace() {
         if (flaws && Array.isArray(res.fatalFlaws)) {
           flaws.innerHTML = res.fatalFlaws.map((fl, i) => `
             <div class="grill-flaw-item">
-              <span style="font-weight:900; color:#ef4444;">${i + 1}.</span>
+              <span style="font-weight:900; color:#f59e0b;">${i + 1}.</span>
               <span>${escapeHtml(fl)}</span>
             </div>
           `).join('');
@@ -5894,7 +5909,52 @@ function bindDottiSidebarAndHeader() {
   }
 }
 
+function initAppBootSplash() {
+  const splash = document.getElementById('appBootSplash');
+  if (!splash) return;
+
+  const bar = document.getElementById('splashLoaderBar');
+  const lbl = document.getElementById('splashStatusLbl');
+
+  let dismissed = false;
+  const dismiss = () => {
+    if (dismissed) return;
+    dismissed = true;
+    splash.classList.add('dismissed');
+    setTimeout(() => {
+      try { splash.remove(); } catch (e) {}
+    }, 550);
+  };
+
+  // Allow instant skip on click or keypress
+  splash.addEventListener('click', dismiss);
+  window.addEventListener('keydown', () => {
+    if (!dismissed) dismiss();
+  }, { once: true });
+
+  // Smooth staged boot progression
+  if (bar) bar.style.width = '30%';
+  if (lbl) lbl.textContent = 'Carregando motores de recomendação...';
+
+  setTimeout(() => {
+    if (dismissed) return;
+    if (bar) bar.style.width = '75%';
+    if (lbl) lbl.textContent = 'Sincronizando inteligência algorítmica...';
+  }, 220);
+
+  setTimeout(() => {
+    if (dismissed) return;
+    if (bar) bar.style.width = '100%';
+    if (lbl) lbl.textContent = 'Viral Research 2.0 Pronto!';
+  }, 480);
+
+  setTimeout(() => {
+    dismiss();
+  }, 780);
+}
+
 function initViralV2() {
+  initAppBootSplash();
   loadGamification();
   bindDottiSidebarAndHeader();
   initBoostWorkspace();
@@ -5903,6 +5963,7 @@ function initViralV2() {
     loadBrowserView();
   }
 }
+
 
 
 

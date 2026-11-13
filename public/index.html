@@ -14,6 +14,29 @@
   <link rel="stylesheet" href="modern-motion.css?v=4.3">
   <link rel="stylesheet" href="viral-v2.css?v=2.0">
 <body>
+  <!-- Modern Startup / Boot Reveal Animation -->
+  <div class="app-boot-splash" id="appBootSplash" aria-hidden="true">
+    <div class="splash-card">
+      <div class="splash-badge-wrap">
+        <div class="splash-pulsar"></div>
+        <svg class="splash-brand-logo" viewBox="0 0 64 64">
+          <rect width="64" height="64" rx="18" fill="#080c0e" stroke="#10b981" stroke-width="2"/>
+          <rect x="8" y="8" width="48" height="48" rx="14" fill="#041f17" stroke="#34d399" stroke-width="1.5"/>
+          <path d="M25 19v26l22-13z" fill="#10b981"/>
+          <circle cx="24" cy="32" r="4" fill="#00ff88"/>
+          <path d="M20 16c5-2 15-2 23 2" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+        </svg>
+        <div class="splash-scan-radar"></div>
+      </div>
+      <div class="splash-title">VIRAL RESEARCH <span class="splash-tag">2.0</span></div>
+      <div class="splash-tagline">Inteligência Algorítmica &bull; Niche Finder</div>
+      <div class="splash-loader-track">
+        <div class="splash-loader-bar" id="splashLoaderBar"></div>
+      </div>
+      <div class="splash-status-lbl" id="splashStatusLbl">Carregando inteligência viral...</div>
+    </div>
+  </div>
+
   <header class="mobile-appbar">
     <button class="mobile-menu-button" id="mobileMenuBtn" type="button" aria-label="Abrir navegação" aria-controls="appSidebar">
       <svg aria-hidden="true"><use href="lucide-sprite.svg#menu"></use></svg>
@@ -112,14 +135,6 @@
             <span class="nav-icon">🔥</span>
             <span>Estouraram (2x ou mais)</span>
           </button>
-          <button type="button" class="dotti-nav-item" data-page="research" data-dotti-action="niches">
-            <span class="nav-icon">👥</span>
-            <span>Grupos de Canais</span>
-          </button>
-          <button type="button" class="dotti-nav-item" data-page="research" data-dotti-action="titles">
-            <span class="nav-icon">🎯</span>
-            <span>Títulos que Funcionam</span>
-          </button>
         </div>
 
         <div>
@@ -138,14 +153,6 @@
             <span class="nav-icon">📑</span>
             <span>Fábrica de Blueprints</span>
           </button>
-        </div>
-      </div>
-
-      <div class="dotti-user-profile">
-        <div class="dotti-user-avatar">M</div>
-        <div class="dotti-user-info">
-          <span class="dotti-user-name">Micael Paciência</span>
-          <span class="dotti-user-tier">PRO • Acesso VIP</span>
         </div>
       </div>
 
@@ -169,6 +176,14 @@
       </section>
 
       <div class="sb-foot">
+        <div class="dotti-user-profile">
+          <div class="dotti-user-avatar">M</div>
+          <div class="dotti-user-info">
+            <span class="dotti-user-name">Micael Paciência</span>
+            <span class="dotti-user-tier">PRO • Acesso VIP</span>
+          </div>
+          <span class="dotti-status-beacon" title="Conta Conectada &amp; Sincronizada"></span>
+        </div>
         <div class="settings-sync" id="sidebarSync">Settings synced</div>
       </div>
     </aside>
@@ -182,20 +197,20 @@
         <div class="key-pill" id="keyStatus">Connecting</div>
       </div>
 
-      <!-- DottiFinder Gamification & Level Topbar -->
-      <div class="dotti-topbar-addon" id="dottiTopbarAddon">
+      <!-- Viral Research Modern Gamification & Status Topbar -->
+      <div class="dotti-topbar-addon minimalist-addon" id="dottiTopbarAddon">
         <div class="dotti-welcome-box">
           <div class="dotti-welcome-title">
             <span>Olá, Micael!</span>
-            <span style="font-size:10px; padding:2px 6px; border-radius:4px; background:rgba(239,68,68,0.25); color:#ff6b6b; font-weight:800;">PRO 2.0</span>
+            <span class="viral-tier-pill">PRO VIP</span>
           </div>
-          <div class="dotti-welcome-sub">Os produtos do Viral Research &amp; DottiFinder. Inteligência algorítmica ao vivo.</div>
+          <div class="dotti-welcome-sub">Viral Research • Inteligência Algorítmica ao Vivo</div>
         </div>
 
         <div class="garimpo-level-widget" id="garimpoLevelWidget" title="Seu nível no Garimpo de Outliers. Ganhe XP minerando e salvando canais!">
           <div class="garimpo-level-badge">
             <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <span id="garimpoLevelText">NV 11 Capitão do garimpo</span>
+            <span id="garimpoLevelText">NV 12 Capitão do Garimpo</span>
           </div>
           <div class="garimpo-xp-bar-wrap">
             <div class="garimpo-xp-labels">
@@ -209,22 +224,13 @@
         </div>
 
         <div class="garimpo-stat-pill">
-          <small>SEUS CANAIS ACHARAM</small>
+          <small>MINERAÇÃO DA BASE</small>
           <b id="garimpoChannelsFoundText">+1.135 canais</b>
-        </div>
-
-        <div class="garimpo-leaderboard">
-          <span>QUEM TROUXE MAIS (7D):</span>
-          <div class="garimpo-leader-tags">
-            <span class="leader-tag">Diego 18</span>
-            <span class="leader-tag">Mateus 6</span>
-            <span class="leader-tag">Marina 4</span>
-          </div>
         </div>
 
         <div class="dotti-header-actions">
           <button type="button" class="dotti-btn-train" id="dottiTrainBtn" title="Treinar e aquecer perfis de navegação">
-            <span>⚡ TREINAR</span>
+            <span>⚡ Treinar</span>
           </button>
           <button type="button" class="dotti-btn-package" id="dottiOpenPackHeaderBtn" title="Abrir pacote de canais descobertos">
             <span>🎁 Abrir Pacote</span>
@@ -1292,10 +1298,10 @@
                   <span>🎯</span>
                   <span>Veredito &amp; Nota Viral</span>
                 </h3>
-                <span class="dotti-tag-status" id="grillScoreBadge" style="background:#ef4444; color:#fff; font-size:12px; font-weight:800; padding:4px 10px;">NOTA: 38/100 (FLOP)</span>
+                <span class="dotti-tag-status" id="grillScoreBadge" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#fff; font-size:12px; font-weight:800; padding:4px 10px; border-radius:6px;">NOTA: 38/100 (FLOP)</span>
               </div>
 
-              <div id="grillVerdictBox" style="background:rgba(239,68,68,0.1); border-left:3px solid #ef4444; padding:12px 14px; border-radius:8px; font-size:13px; color:#f1f5f9; line-height:1.5;">
+              <div id="grillVerdictBox" style="background:rgba(16,185,129,0.08); border-left:3px solid #10b981; padding:12px 14px; border-radius:8px; font-size:13px; color:#f1f5f9; line-height:1.5;">
                 Carregando análise...
               </div>
 
@@ -1597,9 +1603,18 @@
       <div class="magic-box-content">
         <div class="magic-unboxing-pack" id="magicUnboxingPack" title="Clique para abrir!">
           <div class="pack-3d-glow"></div>
-          <div class="pack-3d-body">
-            <span class="pack-label-3d">VIRAL PACK</span>
-            <div class="pack-icon-glow">⚡</div>
+          <div class="pack-3d-shadow"></div>
+          <div class="pack-chest-box">
+            <div class="pack-chest-lid" id="packChestLid">
+              <div class="lid-gem">✨</div>
+              <div class="lid-ribbon"></div>
+            </div>
+            <div class="pack-3d-body">
+              <div class="pack-energy-beam"></div>
+              <span class="pack-label-3d">VIRAL PACK</span>
+              <div class="pack-icon-glow">⚡</div>
+              <div class="pack-neon-stripes"></div>
+            </div>
           </div>
           <span class="pack-prompt-label">🎁 Clique para abrir o pacote!</span>
         </div>
